@@ -8,6 +8,6 @@
     "default_icon": "logo.png",
     "default_title": "Rancher"
   },
-  "permissions": ["http://*/", "https://*/", "ws://*/", "chrome-extension://*", "cookies", "<all_urls>"],
+  "permissions": ["<all_urls>", "notifications", "storage"],
   "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='"
 }

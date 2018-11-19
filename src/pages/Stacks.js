@@ -44,9 +44,10 @@ class Stacks extends Component {
   };
 
   handleKeyChange = ({ key }) => {
+    const { query } = this.state;
     const stacks = this.getActiveStacks();
   
-    if (key === "Enter" && stacks.length) {
+    if (key === "Enter" && query && stacks.length) {
       this.selectStack(stacks[0]);
     }
   };
@@ -66,6 +67,8 @@ class Stacks extends Component {
           <h1>Stacks</h1>
           <Search
             value={query}
+            name="searchStacks"
+            key="searchStacks"
             onChange={this.handleSearchChange}
             onKeyDown={this.handleKeyChange}
           />

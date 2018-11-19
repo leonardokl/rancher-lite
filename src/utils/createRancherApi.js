@@ -16,8 +16,6 @@ function createRancherApi({ url, accessKey, secretKey }) {
     get: async pathName => {
       const response = await fetch(`${baseURL}${pathName}`, options);
 
-      console.log('HEADERS');
-      console.log(response.headers.get('Content-Type'));
       return response.json();
     },
     post: async (pathName, opts = {}) => {
