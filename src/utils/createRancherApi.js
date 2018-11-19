@@ -5,7 +5,7 @@ function createRancherApi({ url, accessKey, secretKey }) {
     headers: {
       Accept: "application/json",
       Authorization: `Basic ${btoa(auth)}`,
-      "X-Api-Csrf": "66E0A423F1",
+      "X-Api-Csrf": "",
       'Origin': '*',
       'Access-Control-Allow-Headers': '*',
       'Access-Control-Allow-Origin': '*',
