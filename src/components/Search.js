@@ -4,6 +4,7 @@ const Search = props => (
   <input
     className="form-control input-sm ember-view ember-text-field"
     placeholder="Search..."
+    autoFocus
     {...props}
   />
 );
