@@ -2,11 +2,16 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import sortBy from "lodash/sortBy";
 import { getApi } from "../store";
-import { actions, getSelectedStack } from "../store";
+import { actions, getSelectedStack, getFilteredServices } from "../store";
 import Card from "../components/Stack";
+import Search from "../components/Search";
 import Service from "./Service";
 
 class Stack extends Component {
+  state = {
+    query: ""
+  };
+
   componentDidMount() {
     const { fetchServices, setServices, showLoader, hideLoader } = this.props;
 
@@ -18,14 +23,19 @@ class Stack extends Component {
       .then(hideLoader);
   }
 
+  handleSearchChange = evt => {
+    this.setState({ query: evt.target.value });
+  };
+
+  createServiceClickHandles = service => () => {
+    this.props.selectService(service.id);
+    this.setState({ query: "" });
+  };
+
   render() {
-    const {
-      stack,
-      services,
-      selectService,
-      selectStack,
-      selectedService
-    } = this.props;
+    const { stack, selectStack, selectedService, getServices } = this.props;
+    const { query } = this.state;
+    const services = getServices(query);
 
     if (selectedService) {
       return <Service key={selectedService} />;
@@ -40,10 +50,14 @@ class Stack extends Component {
             </a>
             <span style={{ fontSize: 15 }}>{stack.name}</span>
           </h1>
+          <Search value={query} onChange={this.handleSearchChange} />
         </section>
         <section className="stacks-wrap r-pl0 r-pr0">
           {services.map(service => (
-            <Card data={service} onClick={() => selectService(service.id)} />
+            <Card
+              data={service}
+              onClick={this.createServiceClickHandles(service)}
+            />
           ))}
         </section>
       </div>
@@ -58,7 +72,7 @@ const mapStateToProps = state => {
     stack,
     selectedService: state.selectedService,
     services: state.services,
-
+    getServices: query => getFilteredServices(state, query),
     fetchServices: () =>
       getApi(state).get(
         `projects/${state.selectedProject}/stacks/${

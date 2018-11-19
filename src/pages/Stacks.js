@@ -1,11 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getApi } from "../store";
-import { actions } from "../store";
+import { actions, getFilteredStacks } from "../store";
 import StackCard from "../components/Stack";
+import Search from "../components/Search";
 import Stack from "./Stack";
 
 class Stacks extends Component {
+  state = {
+    query: ""
+  };
+
   componentDidMount() {
     const { fetchStacks, setStacks, showLoader, hideLoader } = this.props;
 
@@ -17,8 +22,19 @@ class Stacks extends Component {
       .then(hideLoader);
   }
 
+  handleSearchChange = evt => {
+    this.setState({ query: evt.target.value });
+  };
+
+  createStackClickHandles = stack => () => {
+    this.props.selectStack(stack.id);
+    this.setState({ query: "" });
+  };
+
   render() {
-    const { stacks, selectStack, selectedStack } = this.props;
+    const { getStacks, selectedStack } = this.props;
+    const { query } = this.state;
+    const stacks = getStacks(query);
 
     if (selectedStack) {
       return <Stack key={selectedStack} />;
@@ -28,10 +44,15 @@ class Stacks extends Component {
       <div>
         <section className="header">
           <h1>Stacks</h1>
+          <Search value={query} onChange={this.handleSearchChange} />
         </section>
+
         <section className="stacks-wrap r-pl0 r-pr0">
           {stacks.map(stack => (
-            <StackCard data={stack} onClick={() => selectStack(stack.id)} />
+            <StackCard
+              data={stack}
+              onClick={this.createStackClickHandles(stack)}
+            />
           ))}
         </section>
       </div>
@@ -41,6 +62,7 @@ class Stacks extends Component {
 
 const mapStateToProps = state => ({
   stacks: state.stacks,
+  getStacks: query => getFilteredStacks(state, query),
   selectedStack: state.selectedStack,
   fetchStacks: () =>
     getApi(state).get(

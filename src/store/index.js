@@ -13,5 +13,5 @@ const store = createStore(reducers, enhancer);
 epicMiddleware.run(epics);
 
 export { actions };
-export * from './reducers';
+export * from './selectors';
 export default store;

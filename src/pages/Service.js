@@ -39,12 +39,37 @@ function getTag(service) {
 }
 
 class Service extends Component {
+  state = {
+    loading: false
+  };
+
   handleRestart = () => {
-    this.props.restart();
+    this.setState({ loading: true });
+
+    this.props
+      .restart()
+      .then(() => {})
+      .catch(() => {})
+      .then(() => {
+        this.setState({ loading: false });
+      });
+  };
+
+  handleFinishUpgrade = () => {
+    this.setState({ loading: true });
+
+    this.props
+      .finishUpgrade()
+      .then(() => {})
+      .catch(() => {})
+      .then(() => {
+        this.setState({ loading: false });
+      });
   };
 
   render() {
     const { service, selectService } = this.props;
+    const { loading } = this.state;
     const image = getImage(service);
 
     return (
@@ -70,7 +95,18 @@ class Service extends Component {
         </section>
         <div className="footer-actions">
           {!!service.actions.restart && (
-            <Button content="Restart" onClick={this.handleRestart} />
+            <Button
+              content="Restart"
+              loading={loading}
+              onClick={this.handleRestart}
+            />
+          )}
+          {!!service.actions.finishupgrade && (
+            <Button
+              content="Finish Upgrade"
+              loading={loading}
+              onClick={this.handleFinishUpgrade}
+            />
           )}
           {/*<Button type="button" link content="Cancel" />*/}
         </div>
@@ -90,7 +126,21 @@ const mapStateToProps = state => {
       getApi(state).post(
         `projects/${state.selectedProject}/services/${
           service.id
-        }?action=restart`
+        }?action=restart`,
+        {
+          body: JSON.stringify({
+            rollingRestartStrategy: {
+              batchSize: 1,
+              intervalMillis: 2000
+            }
+          })
+        }
+      ),
+    finishUpgrade: () =>
+      getApi(state).post(
+        `projects/${state.selectedProject}/services/${
+          service.id
+        }?action=finishupgrade`
       )
   };
 };

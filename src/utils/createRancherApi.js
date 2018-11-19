@@ -17,12 +17,13 @@ function createRancherApi({ url, accessKey, secretKey }) {
       const response = await fetch(`${baseURL}${pathName}`, options);
 
       console.log('HEADERS');
-      console.log(response.headers.get('Set-Cookie'));
+      console.log(response.headers.get('Content-Type'));
       return response.json();
     },
-    post: async pathName => {
+    post: async (pathName, opts = {}) => {
       const response = await fetch(`${baseURL}${pathName}`, {
         ...options,
+        ...opts,
         method: "POST"
       });
 
