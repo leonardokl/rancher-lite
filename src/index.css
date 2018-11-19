@@ -1,0 +1,34 @@
+body {
+  background-color: #eceff0;
+  color: #2c3e50;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* override rancher style */
+header nav.navbar .nav > li:first-of-type > a {
+  padding-left: 10px;
+  padding-right: 20px;
+}
+
+header nav.navbar .project-btn {
+  height: auto !important;
+}
+
+.clearfix.well.r-p0.r-m0:hover {
+  background-color: #99a3a8!important;
+}
+
+.clearfix.well.r-p0.r-m0:hover .stack-link {
+  color: white!important;
+}
