@@ -26,15 +26,35 @@ class Stacks extends Component {
     this.setState({ query: evt.target.value });
   };
 
-  createStackClickHandles = stack => () => {
+  selectStack = (stack) => {
     this.props.selectStack(stack.id);
     this.setState({ query: "" });
   };
 
-  render() {
-    const { getStacks, selectedStack } = this.props;
+  createStackClickHandles = stack => () => {
+    this.selectStack(stack);
+  };
+
+  getActiveStacks = () => {
+    const { getStacks } = this.props;
     const { query } = this.state;
     const stacks = getStacks(query);
+
+    return stacks;
+  };
+
+  handleKeyChange = ({ key }) => {
+    const stacks = this.getActiveStacks();
+  
+    if (key === "Enter" && stacks.length) {
+      this.selectStack(stacks[0]);
+    }
+  };
+
+  render() {
+    const { selectedStack } = this.props;
+    const { query } = this.state;
+    const stacks = this.getActiveStacks();
 
     if (selectedStack) {
       return <Stack key={selectedStack} />;
@@ -44,7 +64,11 @@ class Stacks extends Component {
       <div>
         <section className="header">
           <h1>Stacks</h1>
-          <Search value={query} onChange={this.handleSearchChange} />
+          <Search
+            value={query}
+            onChange={this.handleSearchChange}
+            onKeyDown={this.handleKeyChange}
+          />
         </section>
 
         <section className="stacks-wrap r-pl0 r-pr0">

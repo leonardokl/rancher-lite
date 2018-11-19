@@ -27,15 +27,35 @@ class Stack extends Component {
     this.setState({ query: evt.target.value });
   };
 
-  createServiceClickHandles = service => () => {
-    this.props.selectService(service.id);
+  selectService = stack => {
+    this.props.selectService(stack.id);
     this.setState({ query: "" });
   };
 
-  render() {
-    const { stack, selectStack, selectedService, getServices } = this.props;
+  createServiceClickHandles = service => () => {
+    this.selectService(service);
+  };
+
+  getActiveServices = () => {
+    const { getServices } = this.props;
     const { query } = this.state;
     const services = getServices(query);
+
+    return services;
+  };
+
+  handleKeyChange = ({ key }) => {
+    const services = this.getActiveServices();
+
+    if (key === "Enter" && services.length) {
+      this.selectService(services[0]);
+    }
+  };
+
+  render() {
+    const { stack, selectStack, selectedService } = this.props;
+    const { query } = this.state;
+    const services = this.getActiveServices();
 
     if (selectedService) {
       return <Service key={selectedService} />;
@@ -50,7 +70,11 @@ class Stack extends Component {
             </a>
             <span style={{ fontSize: 15 }}>{stack.name}</span>
           </h1>
-          <Search value={query} onChange={this.handleSearchChange} />
+          <Search
+            value={query}
+            onChange={this.handleSearchChange}
+            onKeyPress={this.handleKeyChange}
+          />
         </section>
         <section className="stacks-wrap r-pl0 r-pr0">
           {services.map(service => (
