@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import sortBy from "lodash/sortBy";
 import { getApi } from "../store";
 import { actions, getSelectedStack, getFilteredServices } from "../store";
+import notification from "../utils/notification";
 import Card from "../components/Stack";
 import Search from "../components/Search";
 import Service from "./Service";
@@ -19,7 +20,10 @@ class StackPage extends Component {
 
     fetchServices()
       .then(({ data }) => setServices(sortBy(data, "name")))
-      .catch(() => setServices([]));
+      .catch((ex) => {
+        setServices([]);
+        notification.error(ex.message);
+      });
   }
 
   handleSearchChange = evt => {

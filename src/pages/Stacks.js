@@ -4,6 +4,7 @@ import { getApi } from "../store";
 import { actions, getFilteredStacks } from "../store";
 import StackCard from "../components/Stack";
 import Search from "../components/Search";
+import notification from "../utils/notification";
 import Stack from "./Stack";
 
 class StacksPage extends Component {
@@ -18,7 +19,11 @@ class StacksPage extends Component {
 
     fetchStacks()
       .then(({ data }) => setStacks(data))
-      .catch(() => setStacks([]));
+      .catch((ex) => {
+        console.error(ex);
+        setStacks([]);
+        notification.error(ex.message);
+      });
   }
 
   handleSearchChange = evt => {

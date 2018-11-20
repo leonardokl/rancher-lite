@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { getApi } from "../store";
 import { actions } from "../store";
 import StacksPage from "./Stacks";
+import ProjectsPage from "./Projects";
 
 class ServerPage extends Component {
   componentDidMount() {
@@ -22,7 +23,7 @@ class ServerPage extends Component {
       return <StacksPage key={selectedProject} />;
     }
 
-    return null;
+    return <ProjectsPage />;
   }
 }
 

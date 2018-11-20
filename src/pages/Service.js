@@ -8,6 +8,7 @@ import {
   getSelectedService,
   getApi
 } from "../store";
+import notification from "../utils/notification";
 import { getImage, getImageTag } from "../utils/service";
 
 class ServicePage extends Component {
@@ -20,8 +21,8 @@ class ServicePage extends Component {
 
     this.props
       .restart()
-      .then(() => {})
-      .catch(() => {})
+      .then(() => notification.success("The service are restarting"))
+      .catch(ex => notification.error(ex.message))
       .then(() => {
         this.setState({ loading: false });
       });
@@ -32,8 +33,8 @@ class ServicePage extends Component {
 
     this.props
       .finishUpgrade()
-      .then(() => {})
-      .catch(() => {})
+      .then(() => notification.success("The upgrade are being finished"))
+      .catch(ex => notification.error(ex.message))
       .then(() => {
         this.setState({ loading: false });
       });
@@ -63,6 +64,8 @@ class ServicePage extends Component {
               <hr />
             </React.Fragment>
           )}
+          <Info label="State:" value={service.state} />
+          <hr />
           <Info label="Type:" value={service.type} />
         </section>
         <div className="footer-actions">
@@ -80,7 +83,6 @@ class ServicePage extends Component {
               onClick={this.handleFinishUpgrade}
             />
           )}
-          {/*<Button type="button" link content="Cancel" />*/}
         </div>
       </div>
     );
