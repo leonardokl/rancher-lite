@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getApi } from "../store";
-import { actions, getFilteredStacks } from "../store";
+import { actions, getFilteredStacks, getWebsocketUrl } from "../store";
 import StackCard from "../components/Stack";
 import Search from "../components/Search";
 import notification from "../utils/notification";
@@ -11,26 +11,56 @@ class StacksPage extends Component {
   state = {
     query: ""
   };
+  socket = undefined;
 
   componentDidMount() {
-    const { fetchStacks, setStacks, showLoader } = this.props;
+    const { fetchStacks, setStacks, showLoader, websocketUrl } = this.props;
+
+    this.socket = new WebSocket(websocketUrl);
+
+    this.socket.addEventListener("open", function() {
+      console.log("Socket opened");
+    });
+
+    this.socket.addEventListener("close", function() {
+      console.log("Socket closed");
+    });
+
+    this.socket.addEventListener("message", function(event) {
+      const message = JSON.parse(event.data);
+      const { resourceType, name, data, resourceId } = message;
+
+      if (
+        name === "resource.change" &&
+        data &&
+        resourceType === "service"
+      ) {
+        const { resource } = data;
+
+        console.log(resource);
+      }
+    });
 
     showLoader();
 
     fetchStacks()
       .then(({ data }) => setStacks(data))
-      .catch((ex) => {
+      .catch(ex => {
         console.error(ex);
         setStacks([]);
         notification.error(ex.message);
       });
   }
 
+  componentWillUnmount() {
+    this.socket.close();
+  }
+
   handleSearchChange = evt => {
     this.setState({ query: evt.target.value });
   };
 
-  selectStack = (stack) => {
+  selectStack = stack => {
     this.props.selectStack(stack.id);
     this.setState({ query: "" });
   };
@@ -50,7 +80,7 @@ class StacksPage extends Component {
   handleKeyChange = ({ key }) => {
     const { query } = this.state;
     const stacks = this.getActiveStacks();
-  
+
     if (key === "Enter" && query && stacks.length) {
       this.selectStack(stacks[0]);
     }
@@ -95,6 +125,7 @@ const mapStateToProps = state => ({
   stacks: state.stacks,
   getStacks: query => getFilteredStacks(state, query),
   selectedStack: state.selectedStack,
+  websocketUrl: getWebsocketUrl(state),
   fetchStacks: () =>
     getApi(state).get(
       `projects/${state.selectedProject}/stacks?limit=-1&sort=name`

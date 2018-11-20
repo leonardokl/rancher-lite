@@ -11,6 +11,15 @@ export const getApi = state => {
   }
 };
 
+export const getWebsocketUrl = state => {
+  const server = getSelectedServer(state);
+  const { host } = new URL(server.url);
+
+  return `wss://${server.accessKey}:${server.secretKey}@${host}/v2-beta/projects/${
+    state.selectedProject
+  }/subscribe?eventNames=resource.change`;
+}
+
 export const getFilteredStacks = (state, query) => {
   if (!query) {
     return state.stacks;
