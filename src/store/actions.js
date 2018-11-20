@@ -10,6 +10,7 @@ export default createActions(
   "SHOW_LOADER",
   "HIDE_LOADER",
   "SELECT_SERVER",
+  "REMOVE_SERVER",
   "SET_PROJECTS",
   "SELECT_PROJECT",
   "SET_STACKS",

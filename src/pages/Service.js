@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import get from "lodash/get";
 import Button from "../components/Button";
 import Info from "../components/Info";
 import {
@@ -9,36 +8,9 @@ import {
   getSelectedService,
   getApi
 } from "../store";
+import { getImage, getImageTag } from "../utils/service";
 
-function getImage(service) {
-  const imageUuid = get(
-    service,
-    "upgrade.inServiceStrategy.launchConfig.imageUuid",
-    ""
-  );
-
-  return imageUuid.replace(/^docker:/, "");
-}
-
-function getTag(service) {
-  const imageUuid = get(
-    service,
-    "upgrade.inServiceStrategy.launchConfig.imageUuid",
-    ""
-  );
-
-  if (!imageUuid) return "";
-
-  const regex = /(^docker:)(.*):(.*)/;
-
-  if (imageUuid.match(regex)) {
-    return imageUuid.replace(regex, "$3");
-  }
-
-  return "latest";
-}
-
-class Service extends Component {
+class ServicePage extends Component {
   state = {
     loading: false
   };
@@ -87,7 +59,7 @@ class Service extends Component {
             <React.Fragment>
               <Info label="Image:" value={image} />
               <hr />
-              <Info label="Tag:" value={getTag(service)} />
+              <Info label="Tag:" value={getImageTag(service)} />
               <hr />
             </React.Fragment>
           )}
@@ -155,4 +127,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Service);
+)(ServicePage);

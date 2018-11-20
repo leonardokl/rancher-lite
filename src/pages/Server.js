@@ -2,25 +2,24 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getApi } from "../store";
 import { actions } from "../store";
-import Stacks from "./Stacks";
+import StacksPage from "./Stacks";
 
-class RancherServer extends Component {
+class ServerPage extends Component {
   componentDidMount() {
-    const { fetchProjects, setProjects, showLoader, hideLoader } = this.props;
+    const { fetchProjects, setProjects, showLoader } = this.props;
 
     showLoader();
 
     fetchProjects()
       .then(({ data }) => setProjects(data))
-      .catch(() => setProjects([]))
-      .then(hideLoader);
+      .catch(() => setProjects([]));
   }
 
   render() {
     const { selectedProject } = this.props;
 
     if (selectedProject) {
-      return <Stacks key={selectedProject} />;
+      return <StacksPage key={selectedProject} />;
     }
 
     return null;
@@ -34,11 +33,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setProjects: actions.setProjects,
-  showLoader: actions.showLoader,
-  hideLoader: actions.hideLoader
+  showLoader: actions.showLoader
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RancherServer);
+)(ServerPage);

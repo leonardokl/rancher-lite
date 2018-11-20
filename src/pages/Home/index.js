@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import AddRancherServer from "../AddRancherServer";
-import RancherServer from "../RancherServer";
 import Loading from "../../components/Loading";
+import Servers from "../Servers";
+import Server from "../Server";
 import { actions } from "../../store";
 import Header from "./Header";
 
-class Home extends Component {
+class HomePage extends Component {
   componentDidMount() {
     const { servers, selectedServer, selectServer } = this.props;
 
@@ -16,19 +16,15 @@ class Home extends Component {
   }
 
   render() {
-    const { selectedServer, servers, loading } = this.props;
-
-    if (!servers.length) {
-      return <AddRancherServer />;
-    }
+    const { selectedServer, loading } = this.props;
 
     return (
       <div className="App">
         <Header />
         {selectedServer ? (
-          <RancherServer key={selectedServer} />
+          <Server key={selectedServer} />
         ) : (
-          <AddRancherServer />
+          <Servers />
         )}
         <Loading active={loading} />
       </div>
@@ -50,4 +46,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Home);
+)(HomePage);

@@ -26,12 +26,13 @@ class AddRancherServer extends Component {
   };
 
   render() {
+    const { onCancel } = this.props;
     const { submiting } = this.state;
 
     return (
       <form onSubmit={this.handleSubmit}>
         <section className="header clearfix">
-          <h1>Add Rancher Server</h1>
+          <h1>Add Server</h1>
         </section>
 
         <section className="container-fluid well">
@@ -60,7 +61,7 @@ class AddRancherServer extends Component {
 
         <div className="footer-actions">
           <Button primary loading={submiting} content="Save" />
-          {/*<Button type="button" link content="Cancel" />*/}
+          <Button type="button" link content="Cancel" onClick={onCancel} />
         </div>
       </form>
     );

@@ -7,20 +7,19 @@ import Card from "../components/Stack";
 import Search from "../components/Search";
 import Service from "./Service";
 
-class Stack extends Component {
+class StackPage extends Component {
   state = {
     query: ""
   };
 
   componentDidMount() {
-    const { fetchServices, setServices, showLoader, hideLoader } = this.props;
+    const { fetchServices, setServices, showLoader } = this.props;
 
     showLoader();
 
     fetchServices()
       .then(({ data }) => setServices(sortBy(data, "name")))
-      .catch(() => setServices([]))
-      .then(hideLoader);
+      .catch(() => setServices([]));
   }
 
   handleSearchChange = evt => {
@@ -120,4 +119,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Stack);
+)(StackPage);

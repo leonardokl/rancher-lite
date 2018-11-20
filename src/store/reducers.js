@@ -1,21 +1,26 @@
 import { combineReducers } from "redux";
 import { handleAction, handleActions } from "redux-actions";
 import actions from "./actions";
-import servers from "../tmp/servers";
 
 export default combineReducers({
   loading: handleActions(
     {
       [actions.showLoader]: () => true,
-      [actions.hideLoader]: () => false
+      [actions.hideLoader]: () => false,
+      [actions.setStacks]: () => false,
+      [actions.setServices]: () => false,
+      [actions.setProjects]: () => false
     },
     false
   ),
 
-  servers: handleAction(
-    actions.addServer,
-    (state, { payload }) => state.concat(payload),
-    servers
+  servers: handleActions(
+    {
+      [actions.addServer]: (state, { payload }) => state.concat(payload),
+      [actions.removeServer]: (state, { payload }) =>
+        state.filter(server => server.id !== payload)
+    },
+    []
   ),
   selectedServer: handleActions(
     {

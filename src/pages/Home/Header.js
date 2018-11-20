@@ -13,7 +13,7 @@ class HomeHeader extends Component {
   }
 
   handleServerChange = (evt, { value }) => {
-    const server = value === "addNewServer" ? null : value;
+    const server = value === "manageServers" ? null : value;
 
     this.props.selectServer(server);
   };
@@ -32,7 +32,7 @@ class HomeHeader extends Component {
             <div className="navbar-header">
               <ul className="nav">
                 <Dropdown
-                  placeholder="Server"
+                  placeholder="Servers"
                   main
                   value={selectedServer}
                   options={servers
@@ -40,18 +40,20 @@ class HomeHeader extends Component {
                       value: server.id,
                       text: server.url
                     }))
-                    .concat({ value: "addNewServer", text: "ADD SERVER" })}
+                    .concat({ value: "manageServers", text: "Manage Servers" })}
                   onChange={this.handleServerChange}
                 />
-                <Dropdown
-                  placeholder="Environment"
-                  value={selectedProject}
-                  options={projects.map(project => ({
-                    value: project.id,
-                    text: project.name
-                  }))}
-                  onChange={this.handleDropdownChange}
-                />
+                {!!projects.length && (
+                  <Dropdown
+                    placeholder="Environments"
+                    value={selectedProject}
+                    options={projects.map(project => ({
+                      value: project.id,
+                      text: project.name
+                    }))}
+                    onChange={this.handleDropdownChange}
+                  />
+                )}
               </ul>
             </div>
           </div>

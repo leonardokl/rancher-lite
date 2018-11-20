@@ -6,20 +6,19 @@ import StackCard from "../components/Stack";
 import Search from "../components/Search";
 import Stack from "./Stack";
 
-class Stacks extends Component {
+class StacksPage extends Component {
   state = {
     query: ""
   };
 
   componentDidMount() {
-    const { fetchStacks, setStacks, showLoader, hideLoader } = this.props;
+    const { fetchStacks, setStacks, showLoader } = this.props;
 
     showLoader();
 
     fetchStacks()
       .then(({ data }) => setStacks(data))
-      .catch(() => setStacks([]))
-      .then(hideLoader);
+      .catch(() => setStacks([]));
   }
 
   handleSearchChange = evt => {
@@ -107,4 +106,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Stacks);
+)(StacksPage);

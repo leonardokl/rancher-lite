@@ -6,7 +6,9 @@ const Button = ({ loading, content, primary, link, onClick, ...props }) => (
     className={cn("btn", {
       "btn-primary": primary,
       "btn-link": link,
-      "btn-info": loading
+      "btn-info": loading,
+      "btn-default": props.basic,
+      "btn-sm": props.size === 'small'
     })}
     disabled={props.disabled || loading}
     onClick={onClick}
