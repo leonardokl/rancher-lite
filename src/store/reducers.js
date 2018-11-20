@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import { handleAction, handleActions } from "redux-actions";
+import keyBy from "lodash/keyBy";
 import actions from "./actions";
 
 export default combineReducers({
@@ -60,6 +61,23 @@ export default combineReducers({
       [actions.selectStack]: (state, { payload }) => payload
     },
     null
+  ),
+
+  servicesIds: handleAction(
+    actions.setServices,
+    (state, { payload }) => payload.map(service => service.id),
+    []
+  ),
+
+  servicesById: handleActions(
+    {
+      [actions.setServices]: (state, { payload }) => keyBy(payload, "id"),
+      [actions.updateService]: (state, { payload }) => ({
+        ...state,
+        [payload.id]: payload
+      })
+    },
+    []
   ),
 
   services: handleAction(

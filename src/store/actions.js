@@ -16,5 +16,6 @@ export default createActions(
   "SET_STACKS",
   "SELECT_STACK",
   "SET_SERVICES",
-  "SELECT_SERVICE"
+  "SELECT_SERVICE",
+  "UPDATE_SERVICE"
 );

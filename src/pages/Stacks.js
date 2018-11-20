@@ -14,7 +14,7 @@ class StacksPage extends Component {
   socket = undefined;
 
   componentDidMount() {
-    const { fetchStacks, setStacks, showLoader, websocketUrl } = this.props;
+    const { fetchStacks, setStacks, showLoader, websocketUrl, updateService } = this.props;
 
     this.socket = new WebSocket(websocketUrl);
 
@@ -28,7 +28,7 @@ class StacksPage extends Component {
 
     this.socket.addEventListener("message", function(event) {
       const message = JSON.parse(event.data);
-      const { resourceType, name, data, resourceId } = message;
+      const { resourceType, name, data } = message;
 
       if (
         name === "resource.change" &&
@@ -38,6 +38,7 @@ class StacksPage extends Component {
         const { resource } = data;
 
         console.log(resource);
+        updateService(resource);
       }
     });
 
@@ -136,7 +137,7 @@ const mapDispatchToProps = {
   setStacks: actions.setStacks,
   selectStack: actions.selectStack,
   showLoader: actions.showLoader,
-  hideLoader: actions.hideLoader
+  updateService: actions.updateService
 };
 
 export default connect(

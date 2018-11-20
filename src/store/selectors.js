@@ -15,10 +15,12 @@ export const getWebsocketUrl = state => {
   const server = getSelectedServer(state);
   const { host } = new URL(server.url);
 
-  return `wss://${server.accessKey}:${server.secretKey}@${host}/v2-beta/projects/${
+  return `wss://${server.accessKey}:${
+    server.secretKey
+  }@${host}/v2-beta/projects/${
     state.selectedProject
   }/subscribe?eventNames=resource.change`;
-}
+};
 
 export const getFilteredStacks = (state, query) => {
   if (!query) {
@@ -32,12 +34,14 @@ export const getSelectedStack = state =>
   state.stacks.find(stack => stack.id === state.selectedStack);
 
 export const getSelectedService = state =>
-  state.services.find(service => service.id === state.selectedService);
+  state.servicesById[state.selectedService];
 
 export const getFilteredServices = (state, query) => {
+  const services = state.servicesIds.map(id => state.servicesById[id]);
+
   if (!query) {
-    return state.services;
+    return services;
   }
 
-  return state.services.filter(service => service.name.indexOf(query) !== -1);
+  return services.filter(service => service.name.indexOf(query) !== -1);
 };
