@@ -14,10 +14,8 @@ export const getApi = state => {
 export const getWebsocketUrl = state => {
   const server = getSelectedServer(state);
   const { host } = new URL(server.url);
-
-  return `wss://${server.accessKey}:${
-    server.secretKey
-  }@${host}/v2-beta/projects/${
+  const auth = `${server.accessKey}:${server.secretKey}`;
+  return `wss://${auth}@${host}/v2-beta/projects/${
     state.selectedProject
   }/subscribe?eventNames=resource.change`;
 };

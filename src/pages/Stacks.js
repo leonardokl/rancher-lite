@@ -1,3 +1,4 @@
+/* global chrome */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getApi } from "../store";
@@ -14,7 +15,13 @@ class StacksPage extends Component {
   socket = undefined;
 
   componentDidMount() {
-    const { fetchStacks, setStacks, showLoader, websocketUrl, updateService } = this.props;
+    const {
+      fetchStacks,
+      setStacks,
+      showLoader,
+      websocketUrl,
+      updateService
+    } = this.props;
 
     this.socket = new WebSocket(websocketUrl);
 
@@ -30,11 +37,7 @@ class StacksPage extends Component {
       const message = JSON.parse(event.data);
       const { resourceType, name, data } = message;
 
-      if (
-        name === "resource.change" &&
-        data &&
-        resourceType === "service"
-      ) {
+      if (name === "resource.change" && data && resourceType === "service") {
         const { resource } = data;
 
         console.log(resource);
@@ -43,7 +46,7 @@ class StacksPage extends Component {
     });
 
     showLoader();
-
+    
     fetchStacks()
       .then(({ data }) => setStacks(data))
       .catch(ex => {

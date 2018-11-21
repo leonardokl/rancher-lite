@@ -80,12 +80,6 @@ export default combineReducers({
     []
   ),
 
-  services: handleAction(
-    actions.setServices,
-    (state, { payload }) => payload,
-    []
-  ),
-
   selectedService: handleActions(
     {
       [actions.selectServer]: () => null,

@@ -1,3 +1,4 @@
+
 function validateStatus(response) {
   return response.status >= 200 && response.status < 300;
 }
@@ -9,10 +10,9 @@ function createRancherApi({ url, accessKey, secretKey }) {
     headers: {
       Accept: "application/json",
       Authorization: `Basic ${btoa(auth)}`,
-      "X-Api-Csrf": process.env.REACT_APP_CSRF_TOKEN || "",
       Origin: "*",
       "Access-Control-Allow-Headers": "*",
-      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Origin": "*",
     }
   };
 
