@@ -13,14 +13,8 @@ class StacksPage extends Component {
   };
   socket = undefined;
 
-  componentDidMount() {
-    const {
-      fetchStacks,
-      setStacks,
-      showLoader,
-      updateService,
-      subscribeToResourceChange
-    } = this.props;
+  openSocket = () => {
+    const { updateService, subscribeToResourceChange } = this.props;
 
     this.socket = subscribeToResourceChange();
 
@@ -39,10 +33,15 @@ class StacksPage extends Component {
       if (name === "resource.change" && data && resourceType === "service") {
         const { resource } = data;
 
-        console.log(resource);
         updateService(resource);
       }
     });
+  };
+
+  componentDidMount() {
+    const { fetchStacks, setStacks, showLoader } = this.props;
+
+    this.openSocket();
 
     showLoader();
 

@@ -51,7 +51,11 @@ class Dropdown extends Component {
                 active: option.value === value,
                 selected: option.value === value
               })}
-              onClick={evt => this.props.onChange(evt, option)}
+              onClick={evt => {
+                this.setState({ active: false }, () => {
+                  this.props.onChange(evt, option);
+                })
+              }}
             >
               <a href="#" className="clip">
                 <i className="icon icon icon-home" />

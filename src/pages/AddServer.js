@@ -41,6 +41,7 @@ class AddRancherServer extends Component {
             name="url"
             autoComplete="off"
             required
+            autoFocus
             placeholder="e.g https://myrancherserver.com"
           />
           <Form.Input

@@ -13,9 +13,13 @@ class HomeHeader extends Component {
   }
 
   handleServerChange = (evt, { value }) => {
-    const server = value === "manageServers" ? null : value;
+    const { manageServers, selectedServer } = this.props;
 
-    this.props.selectServer(server);
+    if (value === "manageServers") {
+      manageServers();
+    } else if (value !== selectedServer) {
+      this.props.selectServer(value);
+    }
   };
 
   handleDropdownChange = (evt, { value }) => {
@@ -72,7 +76,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   selectServer: actions.selectServer,
-  selectProject: actions.selectProject
+  selectProject: actions.selectProject,
+  manageServers: actions.manageServers,
 };
 
 export default connect(

@@ -30,18 +30,22 @@ export default combineReducers({
         if (!state) return payload.id;
 
         return state;
-      }
+      },
+      [actions.manageServers]: () => null
     },
     null
   ),
 
-  projects: handleAction(
-    actions.setProjects,
-    (state, { payload }) => payload,
+  projects: handleActions(
+    {
+      [actions.setProjects]: (state, { payload }) => payload,
+      [actions.manageServers]: () => [],
+    },
     []
   ),
   selectedProject: handleActions(
     {
+      [actions.manageServers]: () => null,
       [actions.selectServer]: () => null,
       [actions.selectProject]: (state, { payload }) => payload,
       [actions.setProjects]: (state, { payload }) => {
@@ -56,6 +60,7 @@ export default combineReducers({
   stacks: handleAction(actions.setStacks, (state, { payload }) => payload, []),
   selectedStack: handleActions(
     {
+      [actions.manageServers]: () => null,
       [actions.selectServer]: () => null,
       [actions.selectProject]: () => null,
       [actions.selectStack]: (state, { payload }) => payload
@@ -82,6 +87,7 @@ export default combineReducers({
 
   selectedService: handleActions(
     {
+      [actions.manageServers]: () => null,
       [actions.selectServer]: () => null,
       [actions.selectProject]: () => null,
       [actions.selectStack]: () => null,
