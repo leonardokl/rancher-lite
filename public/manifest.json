@@ -9,7 +9,9 @@
     "default_title": "Rancher"
   },
   "permissions": [
-    "<all_urls>",
+    "wss://*/",
+    "http://*/",
+    "https://*/",
     "notifications",
     "storage",
     "webRequest",
