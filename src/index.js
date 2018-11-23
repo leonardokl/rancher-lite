@@ -2,12 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
-import removeUserAgentFromRequests from "./utils/removeUserAgentFromRequests";
+import beforeSendHeaders from "./utils/beforeSendHeaders";
 import store, { persistor } from "./store";
 import App from "./pages";
 import "./index.css";
 
-removeUserAgentFromRequests();
+beforeSendHeaders();
 
 ReactDOM.render(
   <Provider store={store}>

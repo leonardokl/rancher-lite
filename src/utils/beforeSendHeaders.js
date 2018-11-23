@@ -1,6 +1,6 @@
 /* global chrome */
 
-function removeUserAgentFromRequests() {
+function beforeSendHeaders() {
   const extensionPath = chrome.extension.getURL("");
 
   chrome.webRequest.onBeforeSendHeaders.addListener(
@@ -11,6 +11,15 @@ function removeUserAgentFromRequests() {
         ? details.requestHeaders.filter(header => header.name !== "User-Agent")
         : details.requestHeaders;
 
+      if (details.type === "websocket") {
+        const url = new URL(details.url);
+
+        details.requestHeaders.push({
+          name: "Authorization",
+          value: `Basic ${url.searchParams.get("token")}`
+        });
+      }
+
       return {
         requestHeaders
       };
@@ -20,4 +29,4 @@ function removeUserAgentFromRequests() {
   );
 }
 
-export default removeUserAgentFromRequests;
+export default beforeSendHeaders;

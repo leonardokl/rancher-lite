@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { actions, getSelectedServer } from "../../store";
+import { actions } from "../../store";
 import Dropdown from "../../components/Dropdown";
 
 class HomeHeader extends Component {

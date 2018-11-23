@@ -1,8 +1,7 @@
-/* global chrome */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getApi } from "../store";
-import { actions, getFilteredStacks, getWebsocketUrl } from "../store";
+import { actions, getFilteredStacks } from "../store";
 import StackCard from "../components/Stack";
 import Search from "../components/Search";
 import notification from "../utils/notification";
@@ -19,11 +18,11 @@ class StacksPage extends Component {
       fetchStacks,
       setStacks,
       showLoader,
-      websocketUrl,
-      updateService
+      updateService,
+      subscribeToResourceChange
     } = this.props;
 
-    this.socket = new WebSocket(websocketUrl);
+    this.socket = subscribeToResourceChange();
 
     this.socket.addEventListener("open", function() {
       console.log("Socket opened");
@@ -46,7 +45,7 @@ class StacksPage extends Component {
     });
 
     showLoader();
-    
+
     fetchStacks()
       .then(({ data }) => setStacks(data))
       .catch(ex => {
@@ -125,16 +124,19 @@ class StacksPage extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  stacks: state.stacks,
-  getStacks: query => getFilteredStacks(state, query),
-  selectedStack: state.selectedStack,
-  websocketUrl: getWebsocketUrl(state),
-  fetchStacks: () =>
-    getApi(state).get(
-      `projects/${state.selectedProject}/stacks?limit=-1&sort=name`
-    )
-});
+const mapStateToProps = state => {
+  const api = getApi(state);
+
+  return {
+    stacks: state.stacks,
+    selectedStack: state.selectedStack,
+    getStacks: query => getFilteredStacks(state, query),
+    subscribeToResourceChange: () =>
+      api.subscribeToResourceChange(state.selectedProject),
+    fetchStacks: () =>
+      api.get(`projects/${state.selectedProject}/stacks?limit=-1&sort=name`)
+  };
+};
 
 const mapDispatchToProps = {
   setStacks: actions.setStacks,

@@ -1,4 +1,3 @@
-
 function validateStatus(response) {
   return response.status >= 200 && response.status < 300;
 }
@@ -12,7 +11,7 @@ function createRancherApi({ url, accessKey, secretKey }) {
       Authorization: `Basic ${btoa(auth)}`,
       Origin: "*",
       "Access-Control-Allow-Headers": "*",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "*"
     }
   };
 
@@ -40,6 +39,14 @@ function createRancherApi({ url, accessKey, secretKey }) {
       }
 
       return json;
+    },
+    subscribeToResourceChange: projectId => {
+      const { host } = new URL(url);
+      const wsUrl = `wss://${host}/v2-beta/projects/${projectId}/subscribe?eventNames=resource.change&token=${btoa(
+        auth
+      )}`;
+
+      return new WebSocket(wsUrl);
     }
   };
 }
