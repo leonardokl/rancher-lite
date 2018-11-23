@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import debounce from "lodash/debounce";
 import Button from "../components/Button";
 import Form from "../components/Form";
 import { actions } from "../store";
@@ -25,8 +26,23 @@ class AddRancherServer extends Component {
     });
   };
 
+  debouncedUpdate = debounce(data => {
+    this.props.updateAddServerForm(data);
+  }, 300);
+
+  handleInputChange = ({ target }) => {
+    this.debouncedUpdate({
+      [target.name]: target.value
+    });
+  };
+
+  handleCancel = () => {
+    this.props.resetAddServerForm();
+    this.props.onCancel();
+  };
+
   render() {
-    const { onCancel } = this.props;
+    const { addServerForm } = this.props;
     const { submiting } = this.state;
 
     return (
@@ -39,39 +55,50 @@ class AddRancherServer extends Component {
           <Form.Input
             label="URL"
             name="url"
+            defaultValue={addServerForm.url}
             autoComplete="off"
             required
-            autoFocus
             placeholder="e.g https://myrancherserver.com"
+            onChange={this.handleInputChange}
           />
           <Form.Input
             label="Access Key"
             name="accessKey"
+            defaultValue={addServerForm.accessKey}
             autoComplete="off"
             required
             placeholder="See in yor API Key"
+            onChange={this.handleInputChange}
           />
           <Form.Input
             label="Secret Key"
             name="secretKey"
+            defaultValue={addServerForm.secretKey}
             autoComplete="off"
             required
             placeholder="See in yor API Key"
+            onChange={this.handleInputChange}
           />
         </section>
 
         <div className="footer-actions">
           <Button primary loading={submiting} content="Save" />
-          <Button type="button" link content="Cancel" onClick={onCancel} />
+          <Button type="button" link content="Cancel" onClick={this.handleCancel} />
         </div>
       </form>
     );
   }
 }
 
+const mapStateToProps = state => ({
+  addServerForm: state.addServerForm
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   {
-    onSubmit: actions.addServer
+    onSubmit: actions.addServer,
+    updateAddServerForm: actions.updateAddServerForm,
+    resetAddServerForm: actions.resetAddServerForm
   }
 )(AddRancherServer);

@@ -4,14 +4,6 @@ import { actions } from "../../store";
 import Dropdown from "../../components/Dropdown";
 
 class HomeHeader extends Component {
-  componentDidMount() {
-    const { servers, selectedServer, selectServer } = this.props;
-
-    if (servers.length && !selectedServer) {
-      selectServer(servers[0].id);
-    }
-  }
-
   handleServerChange = (evt, { value }) => {
     const { manageServers, selectedServer } = this.props;
 
@@ -22,8 +14,12 @@ class HomeHeader extends Component {
     }
   };
 
-  handleDropdownChange = (evt, { value }) => {
-    this.props.selectProject(value);
+  handleProjectChange = (evt, { value }) => {
+    const { selectedProject } = this.props;
+
+    if (selectedProject !== value) {
+      this.props.selectProject(value);
+    }
   };
 
   render() {
@@ -39,12 +35,14 @@ class HomeHeader extends Component {
                   placeholder="Servers"
                   main
                   value={selectedServer}
-                  options={servers
-                    .map(server => ({
-                      value: server.id,
-                      text: server.url
-                    }))
-                    .concat({ value: "manageServers", text: "Manage Servers" })}
+                  options={servers.map(server => ({
+                    value: server.id,
+                    text: server.url
+                  }))}
+                  dividerOption={{
+                    value: "manageServers",
+                    text: "Manage Servers"
+                  }}
                   onChange={this.handleServerChange}
                 />
                 {!!projects.length && (
@@ -55,7 +53,7 @@ class HomeHeader extends Component {
                       value: project.id,
                       text: project.name
                     }))}
-                    onChange={this.handleDropdownChange}
+                    onChange={this.handleProjectChange}
                   />
                 )}
               </ul>
@@ -77,7 +75,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   selectServer: actions.selectServer,
   selectProject: actions.selectProject,
-  manageServers: actions.manageServers,
+  manageServers: actions.manageServers
 };
 
 export default connect(

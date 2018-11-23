@@ -15,6 +15,19 @@ export default combineReducers({
     false
   ),
 
+  addServerForm: handleActions(
+    {
+      [actions.updateAddServerForm]: (state, { payload }) => ({
+        ...state,
+        ...payload
+      }),
+      [actions.selectServer]: () => ({}),
+      [actions.resetAddServerForm]: () => ({}),
+      [actions.addServer]: () => ({})
+    },
+    {}
+  ),
+
   servers: handleActions(
     {
       [actions.addServer]: (state, { payload }) => state.concat(payload),
@@ -26,12 +39,8 @@ export default combineReducers({
   selectedServer: handleActions(
     {
       [actions.selectServer]: (state, { payload }) => payload,
-      [actions.addServer]: (state, { payload }) => {
-        if (!state) return payload.id;
-
-        return state;
-      },
-      [actions.manageServers]: () => null
+      [actions.addServer]: (state, { payload }) => payload.id,
+      [actions.manageServers]: () => "manageServers"
     },
     null
   ),
@@ -39,7 +48,7 @@ export default combineReducers({
   projects: handleActions(
     {
       [actions.setProjects]: (state, { payload }) => payload,
-      [actions.manageServers]: () => [],
+      [actions.manageServers]: () => []
     },
     []
   ),

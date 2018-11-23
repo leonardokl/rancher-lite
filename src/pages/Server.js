@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getApi } from "../store";
 import { actions } from "../store";
+import notification from "../utils/notification";
 import StacksPage from "./Stacks";
 import ProjectsPage from "./Projects";
 
@@ -13,7 +14,10 @@ class ServerPage extends Component {
 
     fetchProjects()
       .then(({ data }) => setProjects(data))
-      .catch(() => setProjects([]));
+      .catch(ex => {
+        setProjects([]);
+        notification.error(ex.message);
+      });
   }
 
   render() {

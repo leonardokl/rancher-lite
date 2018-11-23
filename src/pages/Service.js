@@ -82,7 +82,9 @@ class ServicePage extends Component {
             <div
               className={cn("header-state section r-mt5 pull-right", {
                 "text-success": service.state === "active",
-                "text-info": service.state !== "active"
+                "text-info":
+                  service.state !== "active" && service.state !== "inactive",
+                "text-danger": service.state === "inactive"
               })}
               style={{ marginLeft: 0 }}
             >

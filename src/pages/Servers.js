@@ -11,9 +11,9 @@ class ServersPage extends React.Component {
   };
 
   componentDidMount() {
-    const { servers } = this.props;
+    const { servers, addServerForm } = this.props;
 
-    if (!servers.length) {
+    if (!servers.length || Object.keys(addServerForm).length) {
       this.setState({ addServer: true });
     }
   }
@@ -50,7 +50,8 @@ class ServersPage extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  servers: state.servers
+  servers: state.servers,
+  addServerForm: state.addServerForm
 });
 
 const mapDispatchToProps = {

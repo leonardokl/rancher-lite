@@ -10,7 +10,11 @@ class HomePage extends Component {
   componentDidMount() {
     const { servers, selectedServer, selectServer } = this.props;
 
-    if (servers.length && !selectedServer) {
+    if (
+      servers.length &&
+      !selectedServer &&
+      selectedServer !== "manageServers"
+    ) {
       selectServer(servers[0].id);
     }
   }
@@ -21,7 +25,7 @@ class HomePage extends Component {
     return (
       <div className="App">
         <Header />
-        {selectedServer ? (
+        {selectedServer && selectedServer !== "manageServers" ? (
           <Server key={selectedServer} />
         ) : (
           <Servers />

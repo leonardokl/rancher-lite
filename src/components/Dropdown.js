@@ -15,7 +15,7 @@ class Dropdown extends Component {
   };
 
   render() {
-    const { options, value, main, placeholder } = this.props;
+    const { options, value, main, placeholder, dividerOption } = this.props;
     const { active } = this.state;
     const selectedOption = options.find(option => option.value === value);
 
@@ -47,6 +47,7 @@ class Dropdown extends Component {
         >
           {options.map(option => (
             <li
+              key={option.value}
               className={cn("", {
                 active: option.value === value,
                 selected: option.value === value
@@ -54,15 +55,34 @@ class Dropdown extends Component {
               onClick={evt => {
                 this.setState({ active: false }, () => {
                   this.props.onChange(evt, option);
-                })
+                });
               }}
             >
               <a href="#" className="clip">
-                <i className="icon icon icon-home" />
                 {option.text}
               </a>
             </li>
           ))}
+          {dividerOption && (
+            <React.Fragment>
+              <li className="divider" />
+              <li
+                className={cn("", {
+                  active: dividerOption.value === value,
+                  selected: dividerOption.value === value
+                })}
+                onClick={evt => {
+                  this.setState({ active: false }, () => {
+                    this.props.onChange(evt, dividerOption);
+                  });
+                }}
+              >
+                <a href="#" className="clip">
+                  {dividerOption.text}
+                </a>
+              </li>
+            </React.Fragment>
+          )}
         </ul>
       </li>
     );
