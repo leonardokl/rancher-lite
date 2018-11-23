@@ -10,11 +10,11 @@ function beforeSendHeaders() {
       const requestHeaders = isExtensionInitiator
         ? details.requestHeaders.filter(header => header.name !== "User-Agent")
         : details.requestHeaders;
-
+      
       if (details.type === "websocket") {
         const url = new URL(details.url);
 
-        details.requestHeaders.push({
+        requestHeaders.push({
           name: "Authorization",
           value: `Basic ${url.searchParams.get("token")}`
         });
