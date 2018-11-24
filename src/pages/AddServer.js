@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import Form from "../components/Form";
 import { actions } from "../store";
 
-class AddRancherServer extends Component {
+class AddRancherServerPage extends Component {
   state = {
     submiting: false
   };
@@ -101,4 +101,4 @@ export default connect(
     updateAddServerForm: actions.updateAddServerForm,
     resetAddServerForm: actions.resetAddServerForm
   }
-)(AddRancherServer);
+)(AddRancherServerPage);

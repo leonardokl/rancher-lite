@@ -3,7 +3,7 @@ import get from "lodash/get";
 function getImage(service) {
   const imageUuid = get(
     service,
-    "upgrade.inServiceStrategy.launchConfig.imageUuid",
+    "launchConfig.imageUuid",
     ""
   );
 

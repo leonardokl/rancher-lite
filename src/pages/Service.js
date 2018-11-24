@@ -12,10 +12,12 @@ import {
 } from "../store";
 import notification from "../utils/notification";
 import { getImage, getImageTag } from "../utils/service";
+import UpgradeService from "./UpgradeService";
 
 class ServicePage extends Component {
   state = {
-    loading: false
+    loading: false,
+    showUpgradePage: false
   };
 
   handleRestart = () => {
@@ -46,10 +48,22 @@ class ServicePage extends Component {
       });
   };
 
+  handleUpgrade = () => {
+    this.setState({ showUpgradePage: true });
+  };
+
   render() {
     const { stack, service, selectService } = this.props;
-    const { loading } = this.state;
+    const { loading, showUpgradePage } = this.state;
     const image = getImage(service);
+
+    if (showUpgradePage) {
+      return (
+        <UpgradeService
+          onCancel={() => this.setState({ showUpgradePage: false })}
+        />
+      );
+    }
 
     return (
       <div>
@@ -62,9 +76,19 @@ class ServicePage extends Component {
           </h1>
           <div className="pull-right">
             <div className="btn-group resource-actions action-menu r-ml5 pull-right">
+              {!!service.actions.upgrade && service.kind === "service" && (
+                <Button
+                  content="Upgrade"
+                  basic
+                  size="small"
+                  loading={loading}
+                  onClick={this.handleUpgrade}
+                />
+              )}
               {!!service.actions.restart && (
                 <Button
                   content="Restart"
+                  basic
                   size="small"
                   loading={loading}
                   onClick={this.handleRestart}
@@ -73,6 +97,7 @@ class ServicePage extends Component {
               {!!service.actions.finishupgrade && (
                 <Button
                   content="Finish Upgrade"
+                  basic
                   size="small"
                   loading={loading}
                   onClick={this.handleFinishUpgrade}
@@ -111,12 +136,13 @@ class ServicePage extends Component {
 const mapStateToProps = state => {
   const stack = getSelectedStack(state);
   const service = getSelectedService(state);
+  const api = getApi(state);
 
   return {
     stack,
     service,
     restart: () =>
-      getApi(state).post(
+      api.post(
         `projects/${state.selectedProject}/services/${
           service.id
         }?action=restart`,
@@ -130,7 +156,7 @@ const mapStateToProps = state => {
         }
       ),
     finishUpgrade: () =>
-      getApi(state).post(
+      api.post(
         `projects/${state.selectedProject}/services/${
           service.id
         }?action=finishupgrade`
