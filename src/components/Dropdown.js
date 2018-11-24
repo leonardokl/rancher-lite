@@ -35,6 +35,7 @@ class Dropdown extends Component {
           <span className="clip">
             {selectedOption ? selectedOption.text : placeholder}
           </span>
+          {" "}
           <i className="icon icon-chevron-down project-chevron" />
           <span className="sr-only">Toggle Dropdown</span>
         </a>

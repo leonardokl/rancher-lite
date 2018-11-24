@@ -4,6 +4,7 @@ import startCase from "lodash/startCase";
 import cn from "classnames";
 import Button from "../components/Button";
 import Info from "../components/Info";
+import Icon from "../components/Icon";
 import {
   actions,
   getSelectedStack,
@@ -50,6 +51,17 @@ class ServicePage extends Component {
 
   handleUpgrade = () => {
     this.setState({ showUpgradePage: true });
+  };
+
+  renderStateIcon = () => {
+    const { service } = this.props;
+    const icons = {
+      upgraded: "arrow-circle-up",
+      inactive: "circle"
+    };
+    const name = icons[service.state] || "services";
+
+    return <Icon name={name} />;
   };
 
   render() {
@@ -113,7 +125,7 @@ class ServicePage extends Component {
               })}
               style={{ marginLeft: 0 }}
             >
-              {startCase(service.state)}
+              {this.renderStateIcon()} {startCase(service.state)}
             </div>
           </div>
         </section>
