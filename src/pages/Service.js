@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import startCase from "lodash/startCase";
-import cn from "classnames";
 import Button from "../components/Button";
 import Info from "../components/Info";
-import Icon from "../components/Icon";
+import ServiceHeaderState from "../components/ServiceHeaderState";
 import {
   actions,
   getSelectedStack,
@@ -51,17 +49,6 @@ class ServicePage extends Component {
 
   handleUpgrade = () => {
     this.setState({ showUpgradePage: true });
-  };
-
-  renderStateIcon = () => {
-    const { service } = this.props;
-    const icons = {
-      upgraded: "arrow-circle-up",
-      inactive: "circle"
-    };
-    const name = icons[service.state] || "services";
-
-    return <Icon name={name} />;
   };
 
   render() {
@@ -116,17 +103,7 @@ class ServicePage extends Component {
                 />
               )}
             </div>
-            <div
-              className={cn("header-state section r-mt5 pull-right", {
-                "text-success": service.state === "active",
-                "text-info":
-                  service.state !== "active" && service.state !== "inactive",
-                "text-danger": service.state === "inactive"
-              })}
-              style={{ marginLeft: 0 }}
-            >
-              {this.renderStateIcon()} {startCase(service.state)}
-            </div>
+            <ServiceHeaderState service={service} />
           </div>
         </section>
         <section>
