@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Button from "../components/Button";
-import Info from "../components/Info";
-import ServiceHeaderState from "../components/ServiceHeaderState";
+import { Button, Info, ServiceHeaderState, Header } from "../components";
 import {
   actions,
-  getSelectedStack,
+  getApi,
   getSelectedService,
-  getApi
+  getSelectedStack
 } from "../store";
 import notification from "../utils/notification";
 import { getImage, getImageTag } from "../utils/service";
@@ -66,7 +64,7 @@ class ServicePage extends Component {
 
     return (
       <div>
-        <section className="header">
+        <Header>
           <h1>
             <a href="#" onClick={() => selectService(null)}>
               Service:{" "}
@@ -105,7 +103,7 @@ class ServicePage extends Component {
             </div>
             <ServiceHeaderState service={service} />
           </div>
-        </section>
+        </Header>
         <section>
           <Info label="Stack" value={stack.name} />
           {!!image && (

@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getApi } from "../store";
-import { actions } from "../store";
+import { actions, getApi } from "../store";
 import notification from "../utils/notification";
-import StacksPage from "./Stacks";
-import ProjectsPage from "./Projects";
+import Stacks from "./Stacks";
 
 class ServerPage extends Component {
   componentDidMount() {
@@ -24,10 +22,10 @@ class ServerPage extends Component {
     const { selectedProject } = this.props;
 
     if (selectedProject) {
-      return <StacksPage key={selectedProject} />;
+      return <Stacks key={selectedProject} />;
     }
 
-    return <ProjectsPage />;
+    return null;
   }
 }
 

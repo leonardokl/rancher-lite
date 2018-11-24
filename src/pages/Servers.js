@@ -1,8 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Button, Header, Servers } from "../components";
 import { actions } from "../store";
-import Servers from "../components/Servers";
-import Button from "../components/Button";
 import AddServer from "./AddServer";
 
 class ServersPage extends React.Component {
@@ -27,7 +26,7 @@ class ServersPage extends React.Component {
 
     return (
       <div>
-        <section className="header">
+        <Header>
           <h1>
             Servers{" "}
             <Button
@@ -37,7 +36,7 @@ class ServersPage extends React.Component {
               onClick={() => this.setState({ addServer: true })}
             />
           </h1>
-        </section>
+        </Header>
 
         <Servers
           data={servers}

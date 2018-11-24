@@ -1,8 +1,7 @@
+import pick from "lodash/pick";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import pick from "lodash/pick";
-import Button from "../components/Button";
-import Form from "../components/Form";
+import { Button, FooterActions, Form, Header, Well } from "../components";
 import { actions, getApi, getSelectedService } from "../store";
 import { getImage } from "../utils/service";
 
@@ -40,11 +39,9 @@ class UpgradeServicePage extends Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <section className="header clearfix">
-          <h1>Upgrade Service</h1>
-        </section>
+        <Header content="Upgrade Service" />
 
-        <section className="container-fluid well">
+        <Well as="section">
           <Form.Input
             label="Select Image"
             name="image"
@@ -54,9 +51,9 @@ class UpgradeServicePage extends Component {
             required
             placeholder="e.g ubuntu:latest"
           />
-        </section>
+        </Well>
 
-        <div className="footer-actions">
+        <FooterActions>
           <Button primary loading={submiting} content="Upgrade" />
           <Button
             type="button"
@@ -64,7 +61,7 @@ class UpgradeServicePage extends Component {
             content="Cancel"
             onClick={this.handleCancel}
           />
-        </div>
+        </FooterActions>
       </form>
     );
   }

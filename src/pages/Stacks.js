@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getApi } from "../store";
-import { actions, getFilteredStacks } from "../store";
-import Search from "../components/Search";
-import Card from "../components/Card";
+import debounce from "lodash/debounce";
+import { Card, Header, Search } from "../components";
+import { actions, getApi, getFilteredStacks } from "../store";
 import notification from "../utils/notification";
 import Stack from "./Stack";
 
@@ -13,29 +12,31 @@ class StacksPage extends Component {
   };
   socket = undefined;
 
+  updateService = debounce(service => {
+    this.props.updateService(service);
+  }, 300);
+
+  handleSocketMessage = event => {
+    const message = JSON.parse(event.data);
+    const { resourceType, name, data } = message;
+
+    if (name === "resource.change" && data && resourceType === "service") {
+      const { resource } = data;
+
+      this.updateService(resource);
+    }
+  };
+
   openSocket = () => {
-    const { updateService, subscribeToResourceChange } = this.props;
+    const { subscribeToResourceChange } = this.props;
 
     this.socket = subscribeToResourceChange();
 
-    this.socket.addEventListener("open", function() {
-      console.log("Socket opened");
-    });
+    this.socket.addEventListener("open", () => console.log("Socket opened"));
 
-    this.socket.addEventListener("close", function() {
-      console.log("Socket closed");
-    });
+    this.socket.addEventListener("close", () => console.log("Socket closed"));
 
-    this.socket.addEventListener("message", function(event) {
-      const message = JSON.parse(event.data);
-      const { resourceType, name, data } = message;
-
-      if (name === "resource.change" && data && resourceType === "service") {
-        const { resource } = data;
-
-        updateService(resource);
-      }
-    });
+    this.socket.addEventListener("message", this.handleSocketMessage);
   };
 
   componentDidMount() {
@@ -99,7 +100,7 @@ class StacksPage extends Component {
 
     return (
       <div>
-        <section className="header">
+        <Header>
           <h1>Stacks</h1>
           <Search
             value={query}
@@ -108,7 +109,7 @@ class StacksPage extends Component {
             onChange={this.handleSearchChange}
             onKeyDown={this.handleKeyChange}
           />
-        </section>
+        </Header>
 
         <Card.Group>
           {stacks.map(stack => (

@@ -1,40 +1,22 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import Loading from "../../components/Loading";
-import Servers from "../Servers";
-import Server from "../Server";
+import { Loading } from "../../components";
 import { actions } from "../../store";
+import Server from "../Server";
+import Servers from "../Servers";
 import Header from "./Header";
 
-class HomePage extends Component {
-  componentDidMount() {
-    const { servers, selectedServer, selectServer } = this.props;
-
-    if (
-      servers.length &&
-      !selectedServer &&
-      selectedServer !== "manageServers"
-    ) {
-      selectServer(servers[0].id);
-    }
-  }
-
-  render() {
-    const { selectedServer, loading } = this.props;
-
-    return (
-      <div className="App">
-        <Header />
-        {selectedServer && selectedServer !== "manageServers" ? (
-          <Server key={selectedServer} />
-        ) : (
-          <Servers />
-        )}
-        <Loading active={loading} />
-      </div>
-    );
-  }
-}
+const HomePage = ({ selectedServer, loading }) => (
+  <div className="App">
+    <Header />
+    {selectedServer && selectedServer !== "manageServers" ? (
+      <Server key={selectedServer} />
+    ) : (
+      <Servers />
+    )}
+    <Loading active={loading} />
+  </div>
+);
 
 const mapStateToProps = state => ({
   servers: state.servers,

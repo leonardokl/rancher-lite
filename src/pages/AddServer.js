@@ -1,8 +1,7 @@
+import debounce from "lodash/debounce";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import debounce from "lodash/debounce";
-import Button from "../components/Button";
-import Form from "../components/Form";
+import { Button, FooterActions, Form, Header, Well } from "../components";
 import { actions } from "../store";
 
 class AddRancherServerPage extends Component {
@@ -47,11 +46,9 @@ class AddRancherServerPage extends Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <section className="header clearfix">
-          <h1>Add Server</h1>
-        </section>
+        <Header content="Add Server" />
 
-        <section className="container-fluid well">
+        <Well as="section">
           <Form.Input
             label="URL"
             name="url"
@@ -79,12 +76,17 @@ class AddRancherServerPage extends Component {
             placeholder="See in yor API Key"
             onChange={this.handleInputChange}
           />
-        </section>
+        </Well>
 
-        <div className="footer-actions">
+        <FooterActions>
           <Button primary loading={submiting} content="Save" />
-          <Button type="button" link content="Cancel" onClick={this.handleCancel} />
-        </div>
+          <Button
+            type="button"
+            link
+            content="Cancel"
+            onClick={this.handleCancel}
+          />
+        </FooterActions>
       </form>
     );
   }

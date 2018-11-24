@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import sortBy from "lodash/sortBy";
-import { getApi } from "../store";
-import { actions, getSelectedStack, getFilteredServices } from "../store";
+import {
+  actions,
+  getApi,
+  getSelectedStack,
+  getFilteredServices
+} from "../store";
 import notification from "../utils/notification";
-import Card from "../components/Card";
-import Search from "../components/Search";
+import { Header, Card, Search } from "../components";
 import Service from "./Service";
 
 class StackPage extends Component {
@@ -67,7 +70,7 @@ class StackPage extends Component {
 
     return (
       <div>
-        <section className="header">
+        <Header>
           <h1>
             <a href="#" onClick={() => selectStack(null)}>
               Stack:{" "}
@@ -81,7 +84,8 @@ class StackPage extends Component {
             onChange={this.handleSearchChange}
             onKeyPress={this.handleKeyChange}
           />
-        </section>
+        </Header>
+
         <Card.Group>
           {services.map(service => (
             <Card
