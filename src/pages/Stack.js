@@ -1,14 +1,15 @@
+import debounce from "lodash/debounce";
+import sortBy from "lodash/sortBy";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import sortBy from "lodash/sortBy";
+import { Card, Header, Search } from "../components";
 import {
   actions,
   getApi,
-  getSelectedStack,
-  getFilteredServices
+  getFilteredServices,
+  getSelectedStack
 } from "../store";
 import notification from "../utils/notification";
-import { Header, Card, Search } from "../components";
 import Service from "./Service";
 
 class StackPage extends Component {
@@ -29,8 +30,12 @@ class StackPage extends Component {
       });
   }
 
+  search = debounce(query => {
+    this.setState({ query });
+  }, 100);
+
   handleSearchChange = evt => {
-    this.setState({ query: evt.target.value });
+    this.search(evt.target.value);
   };
 
   selectService = stack => {
@@ -61,7 +66,6 @@ class StackPage extends Component {
 
   render() {
     const { stack, selectStack, selectedService } = this.props;
-    const { query } = this.state;
     const services = this.getActiveServices();
 
     if (selectedService) {
@@ -78,7 +82,6 @@ class StackPage extends Component {
             <span style={{ fontSize: 15 }}>{stack.name}</span>
           </h1>
           <Search
-            value={query}
             name="searchServices"
             key="searchServices"
             onChange={this.handleSearchChange}

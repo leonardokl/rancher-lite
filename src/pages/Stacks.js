@@ -12,10 +12,6 @@ class StacksPage extends Component {
   };
   socket = undefined;
 
-  updateService = debounce(service => {
-    this.props.updateService(service);
-  }, 300);
-
   handleSocketMessage = event => {
     const message = JSON.parse(event.data);
     const { resourceType, name, data } = message;
@@ -23,7 +19,7 @@ class StacksPage extends Component {
     if (name === "resource.change" && data && resourceType === "service") {
       const { resource } = data;
 
-      this.updateService(resource);
+      this.props.updateService(resource);
     }
   };
 
@@ -59,8 +55,12 @@ class StacksPage extends Component {
     this.socket.close();
   }
 
+  search = debounce(query => {
+    this.setState({ query });
+  }, 100);
+
   handleSearchChange = evt => {
-    this.setState({ query: evt.target.value });
+    this.search(evt.target.value);
   };
 
   selectStack = stack => {
@@ -91,7 +91,6 @@ class StacksPage extends Component {
 
   render() {
     const { selectedStack } = this.props;
-    const { query } = this.state;
     const stacks = this.getActiveStacks();
 
     if (selectedStack) {
@@ -103,7 +102,6 @@ class StacksPage extends Component {
         <Header>
           <h1>Stacks</h1>
           <Search
-            value={query}
             name="searchStacks"
             key="searchStacks"
             onChange={this.handleSearchChange}

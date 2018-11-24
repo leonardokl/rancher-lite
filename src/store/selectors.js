@@ -1,4 +1,5 @@
 import createRancherApi from "../utils/createRancherApi";
+import searchByName from "../utils/searchByName";
 
 export const getSelectedServer = state =>
   state.servers.find(server => server.id === state.selectedServer);
@@ -16,7 +17,7 @@ export const getFilteredStacks = (state, query) => {
     return state.stacks;
   }
 
-  return state.stacks.filter(stack => stack.name.indexOf(query) !== -1);
+  return searchByName(state.stacks, query);
 };
 
 export const getSelectedStack = state =>
@@ -32,5 +33,5 @@ export const getFilteredServices = (state, query) => {
     return services;
   }
 
-  return services.filter(service => service.name.indexOf(query) !== -1);
+  return searchByName(services, query);
 };
