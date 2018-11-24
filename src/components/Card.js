@@ -1,27 +1,40 @@
 import React from "react";
-import Button from "./Button";
 
 const styles = {
-  stackLink: { display: "flex", justifyContent: "space-between" },
+  stackLink: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: "100%"
+  },
   a: {
-    overflow: "hidden"
+    overflow: "hidden",
+    lineHeight: "20px"
   }
 };
 
 const Card = ({ name, actions, onClick }) => (
   <div className="stack-section" style={{ overflow: "hidden" }}>
-    <div className="well r-p0 r-m0">
+    <div
+      className="card well r-p0 r-m0"
+      tabIndex={0}
+      style={{ cursor: "pointer" }}
+      role="button"
+      onClick={onClick}
+      onKeyPress={({ key }) => {
+        if (key === "Enter") onClick();
+      }}
+    >
       <div className="header-left " style={{ marginLeft: 10, float: "none" }}>
         <h4 className="divider clip stack-link" style={styles.stackLink}>
-          <a
+          <span
             href="#"
-            tabIndex={0}
             style={styles.a}
             title={name}
             onClick={onClick}
           >
             {name}
-          </a>
+          </span>
           {actions}
         </h4>
       </div>

@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getApi } from "../store";
 import { actions, getFilteredStacks } from "../store";
-import StackCard from "../components/Stack";
 import Search from "../components/Search";
+import Card from "../components/Card";
 import notification from "../utils/notification";
 import Stack from "./Stack";
 
@@ -110,14 +110,14 @@ class StacksPage extends Component {
           />
         </section>
 
-        <section className="stacks-wrap r-pl0 r-pr0">
+        <Card.Group>
           {stacks.map(stack => (
-            <StackCard
-              data={stack}
+            <Card
+              name={stack.name}
               onClick={this.createStackClickHandles(stack)}
             />
           ))}
-        </section>
+        </Card.Group>
       </div>
     );
   }

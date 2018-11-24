@@ -26,9 +26,21 @@ header nav.navbar .project-btn {
 }
 
 .clearfix.well.r-p0.r-m0:hover {
-  background-color: #99a3a8!important;
+  background-color: #99a3a8 !important;
 }
 
 .clearfix.well.r-p0.r-m0:hover .stack-link {
-  color: white!important;
+  color: white !important;
+}
+
+.card.well {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+  border: 2px solid transparent !important;
+  transition: ease all 0.25s;
+}
+
+.card.well:hover,
+.card.well:focus,
+.card.well:active {
+  border: 2px solid #3498db !important;
 }

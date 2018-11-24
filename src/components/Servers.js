@@ -14,7 +14,10 @@ const Servers = ({ data, onSelect, onRemove }) => (
               basic
               size="small"
               content="Delete"
-              onClick={() => onRemove(server)}
+              onClick={(evt) => {
+                evt.stopPropagation();
+                onRemove(server);
+              }}
             />
           </div>
         }

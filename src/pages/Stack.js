@@ -4,7 +4,7 @@ import sortBy from "lodash/sortBy";
 import { getApi } from "../store";
 import { actions, getSelectedStack, getFilteredServices } from "../store";
 import notification from "../utils/notification";
-import Card from "../components/Stack";
+import Card from "../components/Card";
 import Search from "../components/Search";
 import Service from "./Service";
 
@@ -20,7 +20,7 @@ class StackPage extends Component {
 
     fetchServices()
       .then(({ data }) => setServices(sortBy(data, "name")))
-      .catch((ex) => {
+      .catch(ex => {
         setServices([]);
         notification.error(ex.message);
       });
@@ -82,14 +82,14 @@ class StackPage extends Component {
             onKeyPress={this.handleKeyChange}
           />
         </section>
-        <section className="stacks-wrap r-pl0 r-pr0">
+        <Card.Group>
           {services.map(service => (
             <Card
-              data={service}
+              name={service.name}
               onClick={this.createServiceClickHandles(service)}
             />
           ))}
-        </section>
+        </Card.Group>
       </div>
     );
   }
