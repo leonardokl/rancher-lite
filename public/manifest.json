@@ -1,12 +1,14 @@
 {
   "manifest_version": 2,
   "version": "0.1.0",
-  "short_name": "Rancher",
-  "name": "Rancher",
+  "name": "Rancher Lite",
+  "description": "Manage multiple rancher servers.",
   "browser_action": {
     "default_popup": "index.html",
-    "default_icon": "logo.png",
-    "default_title": "Rancher"
+    "default_icon": "logo.png"
+  },
+  "icons": {
+    "128": "logo.png"
   },
   "permissions": [
     "wss://*/",
