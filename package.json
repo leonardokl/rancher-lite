@@ -20,6 +20,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "build:watch": "nodemon --exec 'react-scripts build' --watch src --watch public",
+    "build:zip": "node ./scripts/zipBuild",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "update-manifest": "node ./scripts/updateManifest"
@@ -34,6 +35,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "nodemon": "^1.18.6"
+    "nodemon": "^1.18.6",
+    "shelljs": "^0.8.3"
   }
 }
