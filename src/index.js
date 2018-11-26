@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
-import beforeSendHeaders from "./utils/beforeSendHeaders";
-import store, { persistor } from "./store";
-import App from "./pages";
+import { PersistGate } from "redux-persist/integration/react";
 import "./index.css";
+import App from "./pages";
+import store, { persistor } from "./store";
+import beforeSendHeaders from "./utils/beforeSendHeaders";
 
 beforeSendHeaders();
 

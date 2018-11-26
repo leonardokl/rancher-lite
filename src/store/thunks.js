@@ -4,6 +4,16 @@ import actions from "./actions";
 import { getApi, getSelectedStack, getSelectedService } from "./selectors";
 import notification from "../utils/notification";
 
+function getUserPreference(userPreferences, name) {
+  const userPreference = userPreferences.data.find(i => i.name === name);
+
+  try {
+    return JSON.parse(userPreference.value);
+  } catch (ex) {
+    return undefined;
+  }
+}
+
 export const fetchProjects = () => async (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
@@ -11,13 +21,26 @@ export const fetchProjects = () => async (dispatch, getState) => {
   dispatch(actions.showLoader());
 
   try {
-    const response = await api.get("projects");
+    const userPreferencesRequest = api.get(
+      "userpreferences?name=defaultProjectId"
+    );
+    const projectsRequest = api.get("projects");
+    const userPreferences = await userPreferencesRequest;
+    const projects = await projectsRequest;
+    const defaultProjectId = getUserPreference(
+      userPreferences,
+      "defaultProjectId"
+    );
+    const projectsData = projects.data.map(project => ({
+      ...project,
+      default: project.id === defaultProjectId
+    }));
 
-    if (!response.data.length) {
+    if (!projectsData.length) {
       dispatch(actions.hideLoader());
     }
 
-    dispatch(actions.setProjects(response.data));
+    dispatch(actions.setProjects(projectsData));
   } catch (ex) {
     console.error(ex);
     dispatch(actions.hideLoader());

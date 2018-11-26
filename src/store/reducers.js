@@ -7,9 +7,7 @@ export default combineReducers({
   loading: handleActions(
     {
       [actions.showLoader]: () => true,
-      [actions.hideLoader]: () => false,
-      [actions.setStacks]: () => false,
-      [actions.setServices]: () => false
+      [actions.hideLoader]: () => false
     },
     false
   ),
@@ -35,6 +33,7 @@ export default combineReducers({
     },
     []
   ),
+
   selectedServer: handleActions(
     {
       [actions.selectServer]: (state, { payload }) => payload,
@@ -57,9 +56,12 @@ export default combineReducers({
       [actions.selectServer]: () => null,
       [actions.selectProject]: (state, { payload }) => payload,
       [actions.setProjects]: (state, { payload }) => {
-        if (payload.length) return payload[payload.length - 1].id;
+        const defaultProject = payload.find(i => i.default);
 
-        return state;
+        if (defaultProject) return defaultProject.id;
+        if (payload.length) return payload[0].id;
+
+        return null;
       }
     },
     null

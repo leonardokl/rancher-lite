@@ -8,7 +8,7 @@ class AddRancherServerPage extends Component {
   state = {
     submiting: false
   };
-
+  
   handleSubmit = evt => {
     evt.preventDefault();
     const { onSubmit } = this.props;
