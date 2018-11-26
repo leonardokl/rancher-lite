@@ -1,6 +1,6 @@
 {
   "name": "rancher-lite",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
