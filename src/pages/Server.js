@@ -1,21 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { actions, getApi } from "../store";
-import notification from "../utils/notification";
+import { fetchProjects } from "../store";
 import Stacks from "./Stacks";
 
 class ServerPage extends Component {
   componentDidMount() {
-    const { fetchProjects, setProjects, showLoader } = this.props;
+    const { fetchProjects } = this.props;
 
-    showLoader();
-
-    fetchProjects()
-      .then(({ data }) => setProjects(data))
-      .catch(ex => {
-        setProjects([]);
-        notification.error(ex.message);
-      });
+    fetchProjects();
   }
 
   render() {
@@ -30,13 +22,11 @@ class ServerPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  selectedProject: state.selectedProject,
-  fetchProjects: () => getApi(state).get("projects")
+  selectedProject: state.selectedProject
 });
 
 const mapDispatchToProps = {
-  setProjects: actions.setProjects,
-  showLoader: actions.showLoader
+  fetchProjects
 };
 
 export default connect(

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, Info, ServiceHeaderState, Header } from "../components";
+import { Button, Header, Info, ServiceHeaderState } from "../components";
 import {
   actions,
-  getApi,
   getSelectedService,
-  getSelectedStack
+  getSelectedStack,
+  restartService,
+  finishServiceUpgrade
 } from "../store";
-import notification from "../utils/notification";
 import { getImage, getImageTag } from "../utils/service";
 import UpgradeService from "./UpgradeService";
 
@@ -17,32 +17,18 @@ class ServicePage extends Component {
     showUpgradePage: false
   };
 
-  handleRestart = () => {
+  handleRestart = async () => {
     this.setState({ loading: true });
 
-    this.props
-      .restart()
-      .then(service => {
-        this.props.updateService(service);
-      })
-      .catch(ex => notification.error(ex.message))
-      .then(() => {
-        this.setState({ loading: false });
-      });
+    await this.props.restartService();
+    this.setState({ loading: false });
   };
 
-  handleFinishUpgrade = () => {
+  handleFinishUpgrade = async () => {
     this.setState({ loading: true });
 
-    this.props
-      .finishUpgrade()
-      .then(service => {
-        this.props.updateService(service);
-      })
-      .catch(ex => notification.error(ex.message))
-      .then(() => {
-        this.setState({ loading: false });
-      });
+    await this.props.finishServiceUpgrade();
+    this.setState({ loading: false });
   };
 
   handleUpgrade = () => {
@@ -120,38 +106,14 @@ class ServicePage extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const stack = getSelectedStack(state);
-  const service = getSelectedService(state);
-  const api = getApi(state);
-
-  return {
-    stack,
-    service,
-    restart: () =>
-      api.post(
-        `projects/${state.selectedProject}/services/${
-          service.id
-        }?action=restart`,
-        {
-          body: JSON.stringify({
-            rollingRestartStrategy: {
-              batchSize: 1,
-              intervalMillis: 2000
-            }
-          })
-        }
-      ),
-    finishUpgrade: () =>
-      api.post(
-        `projects/${state.selectedProject}/services/${
-          service.id
-        }?action=finishupgrade`
-      )
-  };
-};
+const mapStateToProps = state => ({
+  stack: getSelectedStack(state),
+  service: getSelectedService(state)
+});
 
 const mapDispatchToProps = {
+  restartService,
+  finishServiceUpgrade,
   setServices: actions.setServices,
   updateService: actions.updateService,
   selectService: actions.selectService,

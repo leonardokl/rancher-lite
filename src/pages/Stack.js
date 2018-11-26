@@ -1,15 +1,13 @@
 import debounce from "lodash/debounce";
-import sortBy from "lodash/sortBy";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Card, Header, Search } from "../components";
 import {
   actions,
-  getApi,
+  fetchServices,
   getFilteredServices,
   getSelectedStack
 } from "../store";
-import notification from "../utils/notification";
 import Service from "./Service";
 
 class StackPage extends Component {
@@ -18,16 +16,9 @@ class StackPage extends Component {
   };
 
   componentDidMount() {
-    const { fetchServices, setServices, showLoader } = this.props;
+    const { fetchServices } = this.props;
 
-    showLoader();
-
-    fetchServices()
-      .then(({ data }) => setServices(sortBy(data, "name")))
-      .catch(ex => {
-        setServices([]);
-        notification.error(ex.message);
-      });
+    fetchServices();
   }
 
   search = debounce(query => {
@@ -102,29 +93,17 @@ class StackPage extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const stack = getSelectedStack(state);
-
-  return {
-    stack,
-    selectedService: state.selectedService,
-    services: state.services,
-    getServices: query => getFilteredServices(state, query),
-    fetchServices: () =>
-      getApi(state).get(
-        `projects/${state.selectedProject}/stacks/${
-          stack.id
-        }/services?limit=-1&sort=name`
-      )
-  };
-};
+const mapStateToProps = state => ({
+  stack: getSelectedStack(state),
+  selectedService: state.selectedService,
+  services: state.services,
+  getServices: query => getFilteredServices(state, query)
+});
 
 const mapDispatchToProps = {
-  setServices: actions.setServices,
+  fetchServices,
   selectStack: actions.selectStack,
   selectService: actions.selectService,
-  showLoader: actions.showLoader,
-  hideLoader: actions.hideLoader
 };
 
 export default connect(

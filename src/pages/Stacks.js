@@ -2,8 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import debounce from "lodash/debounce";
 import { Card, Header, Search } from "../components";
-import { actions, getApi, getFilteredStacks } from "../store";
-import notification from "../utils/notification";
+import {
+  actions,
+  getFilteredStacks,
+  fetchStacks,
+  subscribeToResourceChange
+} from "../store";
 import Stack from "./Stack";
 
 class StacksPage extends Component {
@@ -12,43 +16,12 @@ class StacksPage extends Component {
   };
   socket = undefined;
 
-  handleSocketMessage = event => {
-    const message = JSON.parse(event.data);
-    const { resourceType, name, data } = message;
-
-    if (name === "resource.change" && data && resourceType === "service") {
-      const { resource } = data;
-
-      this.props.updateService(resource);
-    }
-  };
-
-  openSocket = () => {
-    const { subscribeToResourceChange } = this.props;
+  componentDidMount() {
+    const { fetchStacks, subscribeToResourceChange } = this.props;
 
     this.socket = subscribeToResourceChange();
 
-    this.socket.addEventListener("open", () => console.log("Socket opened"));
-
-    this.socket.addEventListener("close", () => console.log("Socket closed"));
-
-    this.socket.addEventListener("message", this.handleSocketMessage);
-  };
-
-  componentDidMount() {
-    const { fetchStacks, setStacks, showLoader } = this.props;
-
-    this.openSocket();
-
-    showLoader();
-
-    fetchStacks()
-      .then(({ data }) => setStacks(data))
-      .catch(ex => {
-        console.error(ex);
-        setStacks([]);
-        notification.error(ex.message);
-      });
+    fetchStacks();
   }
 
   componentWillUnmount() {
@@ -68,7 +41,7 @@ class StacksPage extends Component {
     this.setState({ query: "" });
   };
 
-  createStackClickHandles = stack => () => {
+  createStackClickHandler = stack => () => {
     this.selectStack(stack);
   };
 
@@ -113,7 +86,7 @@ class StacksPage extends Component {
           {stacks.map(stack => (
             <Card
               name={stack.name}
-              onClick={this.createStackClickHandles(stack)}
+              onClick={this.createStackClickHandler(stack)}
             />
           ))}
         </Card.Group>
@@ -122,24 +95,16 @@ class StacksPage extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const api = getApi(state);
-
-  return {
-    stacks: state.stacks,
-    selectedStack: state.selectedStack,
-    getStacks: query => getFilteredStacks(state, query),
-    subscribeToResourceChange: () =>
-      api.subscribeToResourceChange(state.selectedProject),
-    fetchStacks: () =>
-      api.get(`projects/${state.selectedProject}/stacks?limit=-1&sort=name`)
-  };
-};
+const mapStateToProps = state => ({
+  stacks: state.stacks,
+  selectedStack: state.selectedStack,
+  getStacks: query => getFilteredStacks(state, query)
+});
 
 const mapDispatchToProps = {
-  setStacks: actions.setStacks,
+  fetchStacks,
+  subscribeToResourceChange,
   selectStack: actions.selectStack,
-  showLoader: actions.showLoader,
   updateService: actions.updateService
 };
 

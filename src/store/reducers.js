@@ -9,8 +9,7 @@ export default combineReducers({
       [actions.showLoader]: () => true,
       [actions.hideLoader]: () => false,
       [actions.setStacks]: () => false,
-      [actions.setServices]: () => false,
-      [actions.setProjects]: () => false
+      [actions.setServices]: () => false
     },
     false
   ),

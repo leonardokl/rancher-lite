@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
+import thunk from 'redux-thunk'
 import createChromeStorage from "redux-persist-chrome-storage";
 import actions from "./actions";
 import reducers from "./reducers";
@@ -12,7 +13,7 @@ const persistConfig = {
   whitelist: ["servers", "selectedServer", "addServerForm"],
   storage
 };
-const middlewares = [];
+const middlewares = [thunk];
 
 if (REACT_APP_DEBUG === "true") {
   const { logger } = require("redux-logger");
@@ -27,4 +28,5 @@ const persistor = persistStore(store);
 
 export { actions, persistor };
 export * from "./selectors";
+export * from "./thunks";
 export default store;

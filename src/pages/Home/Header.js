@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { actions } from "../../store";
-import Dropdown from "../../components/Dropdown";
+import { Navbar } from "../../components";
 
 class HomeHeader extends Component {
   handleServerChange = (evt, { value }) => {
@@ -10,7 +10,7 @@ class HomeHeader extends Component {
     if (value === "manageServers") {
       manageServers();
     } else if (value !== selectedServer) {
-      this.props.selectServer(value);
+      this.props.onSelectServer(value);
     }
   };
 
@@ -18,7 +18,7 @@ class HomeHeader extends Component {
     const { selectedProject } = this.props;
 
     if (selectedProject !== value) {
-      this.props.selectProject(value);
+      this.props.onSelectProject(value);
     }
   };
 
@@ -26,41 +26,14 @@ class HomeHeader extends Component {
     const { projects, servers, selectedProject, selectedServer } = this.props;
 
     return (
-      <header>
-        <nav className="navbar">
-          <div className="container-fluid">
-            <div className="navbar-header">
-              <ul className="nav">
-                <Dropdown
-                  placeholder="Servers"
-                  main
-                  value={selectedServer}
-                  options={servers.map(server => ({
-                    value: server.id,
-                    text: server.url
-                  }))}
-                  dividerOption={{
-                    value: "manageServers",
-                    text: "Manage Servers"
-                  }}
-                  onChange={this.handleServerChange}
-                />
-                {!!projects.length && (
-                  <Dropdown
-                    placeholder="Environments"
-                    value={selectedProject}
-                    options={projects.map(project => ({
-                      value: project.id,
-                      text: project.name
-                    }))}
-                    onChange={this.handleProjectChange}
-                  />
-                )}
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <Navbar
+        projects={projects}
+        servers={servers}
+        selectedProject={selectedProject}
+        selectedServer={selectedServer}
+        onServerChange={this.handleServerChange}
+        onProjectChange={this.handleProjectChange}
+      />
     );
   }
 }
@@ -73,8 +46,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  selectServer: actions.selectServer,
-  selectProject: actions.selectProject,
+  onSelectServer: actions.selectServer,
+  onSelectProject: actions.selectProject,
   manageServers: actions.manageServers
 };
 

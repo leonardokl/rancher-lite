@@ -14,7 +14,8 @@
     "redux-actions": "^2.6.4",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.10.0",
-    "redux-persist-chrome-storage": "^1.0.1"
+    "redux-persist-chrome-storage": "^1.0.1",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -23,7 +24,9 @@
     "build:zip": "node ./scripts/zipBuild",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "update-manifest": "node ./scripts/updateManifest"
+    "update-manifest": "node ./scripts/updateManifest",
+    "version": "npm run update-manifest && git add public/manifest.json",
+    "postversion": "npm run build:zip"
   },
   "eslintConfig": {
     "extends": "react-app"

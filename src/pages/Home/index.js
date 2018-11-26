@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Loading } from "../../components";
-import { actions } from "../../store";
 import Server from "../Server";
 import Servers from "../Servers";
 import Header from "./Header";
@@ -25,11 +24,4 @@ const mapStateToProps = state => ({
   selectedServer: state.selectedServer
 });
 
-const mapDispatchToProps = {
-  selectServer: actions.selectServer
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(HomePage);
+export default connect(mapStateToProps)(HomePage);

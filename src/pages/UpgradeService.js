@@ -1,8 +1,7 @@
-import pick from "lodash/pick";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button, FooterActions, Form, Header, Well } from "../components";
-import { actions, getApi, getSelectedService } from "../store";
+import { getSelectedService, upgradeService } from "../store";
 import { getImage } from "../utils/service";
 
 class UpgradeServicePage extends Component {
@@ -12,16 +11,13 @@ class UpgradeServicePage extends Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
-    const { upgrade, service, updateService, onCancel } = this.props;
+    const { upgradeService, onCancel } = this.props;
     const image = evt.target.elements.image.value;
-    const isDockerImage = /^docker:/.test(service.launchConfig.imageUuid);
-    const imageUuid = isDockerImage ? `docker:${image}` : image;
-
+    
     this.setState({ submiting: true });
 
-    upgrade(imageUuid)
+    upgradeService(image)
       .then(service => {
-        updateService(service);
         onCancel();
       })
       .catch(ex => {
@@ -67,41 +63,13 @@ class UpgradeServicePage extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const service = getSelectedService(state);
-  const inServiceStrategy = pick(service.upgrade.inServiceStrategy, [
-    "batchSize",
-    "intervalMillis",
-    "launchConfig",
-    "secondaryLaunchConfigs",
-    "startFirst"
-  ]);
-
-  return {
-    service,
-    upgrade: imageUuid => {
-      const launchConfig = {
-        ...inServiceStrategy.launchConfig,
-        imageUuid
-      };
-
-      return getApi(state).post(
-        `projects/${state.selectedProject}/services/${
-          state.selectedService
-        }?action=upgrade`,
-        {
-          body: JSON.stringify({
-            inServiceStrategy: { ...inServiceStrategy, launchConfig }
-          })
-        }
-      );
-    }
-  };
-};
+const mapStateToProps = state => ({
+  service: getSelectedService(state)
+});
 
 export default connect(
   mapStateToProps,
   {
-    updateService: actions.updateService
+    upgradeService
   }
 )(UpgradeServicePage);
