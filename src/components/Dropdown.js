@@ -5,6 +5,9 @@ class Dropdown extends Component {
   state = {
     active: false
   };
+  button = React.createRef();
+  items = [];
+  focusedItemIndex = undefined;
 
   handleMouseEnter = () => {
     this.setState({ active: true });
@@ -12,6 +15,67 @@ class Dropdown extends Component {
 
   handleMouseLeave = () => {
     this.setState({ active: false });
+  };
+
+  handleButtonClick = async ({ key }) => {
+    const { options, value, dividerOption } = this.props;
+    const { active } = this.state;
+    const activeIndex = [...options, dividerOption]
+      .filter(Boolean)
+      .findIndex(i => i.value === value);
+
+    await this.setState({ active: !active });
+
+    if (!active && activeIndex !== -1) {
+      this.focusedItemIndex = activeIndex;
+      this.items[activeIndex].focus();
+    }
+  };
+
+  execKeyAction = key => {
+    const keyAction = {
+      Tab: () => this.setState({ active: false }),
+      Escape: () => {
+        this.setState({ active: false });
+        this.button.current.focus();
+      },
+      ArrowDown: () => {
+        if (this.items.length) {
+          const item = this.items[this.focusedItemIndex + 1] || this.items[0];
+
+          item.focus();
+        }
+      },
+      ArrowUp: () => {
+        if (this.items.length) {
+          const item =
+            this.items[this.focusedItemIndex - 1] ||
+            this.items[this.items.length - 1];
+
+          item.focus();
+        }
+      }
+    };
+
+    const action = keyAction[key] || function() {};
+
+    action();
+  };
+
+  handleKeyDown = evt => {
+    if (!this.state.active) return;
+
+    const preventDefault = {
+      Escape: true,
+      ArrowDown: true,
+      ArrowUp: true
+    };
+
+    if (preventDefault[evt.key]) {
+      evt.preventDefault();
+    }
+
+    this.execKeyAction(evt.key);
   };
 
   render() {
@@ -26,16 +90,18 @@ class Dropdown extends Component {
         onMouseLeave={this.handleMouseLeave}
       >
         <a
+          ref={this.button}
           href="#"
           role="button"
           className={"btn btn-link dropdown-toggle text-left"}
-          aria-label="Environment"
+          aria-label={placeholder}
           style={{ minWidth: 90 }}
+          onClick={this.handleButtonClick}
+          onKeyDown={this.handleKeyDown}
         >
           <span className="clip">
             {selectedOption ? selectedOption.text : placeholder}
-          </span>
-          {" "}
+          </span>{" "}
           <i className="icon icon-chevron-down project-chevron" />
           <span className="sr-only">Toggle Dropdown</span>
         </a>
@@ -44,22 +110,30 @@ class Dropdown extends Component {
             block: active
           })}
           role="menu"
-          data-dropdown-id="enviroment"
         >
-          {options.map(option => (
+          {options.map((option, index) => (
             <li
               key={option.value}
               className={cn("", {
                 active: option.value === value,
                 selected: option.value === value
               })}
-              onClick={evt => {
-                this.setState({ active: false }, () => {
-                  this.props.onChange(evt, option);
-                });
-              }}
             >
-              <a href="#" className="clip">
+              <a
+                href="#"
+                className="clip"
+                ref={node => {
+                  this.items[index] = node;
+                }}
+                onKeyDown={this.handleKeyDown}
+                tabIndex={-1}
+                onClick={evt => {
+                  this.setState({ active: false }, () => {
+                    this.props.onChange(evt, option);
+                  });
+                }}
+                onFocus={() => (this.focusedItemIndex = index)}
+              >
                 {option.text}
               </a>
             </li>
@@ -72,13 +146,22 @@ class Dropdown extends Component {
                   active: dividerOption.value === value,
                   selected: dividerOption.value === value
                 })}
-                onClick={evt => {
-                  this.setState({ active: false }, () => {
-                    this.props.onChange(evt, dividerOption);
-                  });
-                }}
               >
-                <a href="#" className="clip">
+                <a
+                  href="#"
+                  className="clip"
+                  tabIndex={-1}
+                  ref={node => {
+                    this.items[options.length] = node;
+                  }}
+                  onClick={evt => {
+                    this.setState({ active: false }, () => {
+                      this.props.onChange(evt, dividerOption);
+                    });
+                  }}
+                  onKeyDown={this.handleKeyDown}
+                  onFocus={() => (this.focusedItemIndex = options.length)}
+                >
                   {dividerOption.text}
                 </a>
               </li>
