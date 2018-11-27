@@ -15,6 +15,8 @@ class StacksPage extends Component {
     query: ""
   };
   socket = undefined;
+  cards = [];
+  activeCardIndex = undefined;
 
   componentDidMount() {
     const { fetchStacks, subscribeToResourceChange } = this.props;
@@ -39,6 +41,7 @@ class StacksPage extends Component {
   selectStack = stack => {
     this.props.selectStack(stack.id);
     this.setState({ query: "" });
+    this.activeCardIndex = undefined;
   };
 
   createStackClickHandler = stack => () => {
@@ -53,18 +56,41 @@ class StacksPage extends Component {
     return stacks;
   };
 
-  handleKeyChange = ({ key }) => {
+  handleKeyChange = evt => {
     const { query } = this.state;
     const stacks = this.getActiveStacks();
 
-    if (key === "Enter" && query && stacks.length) {
+    if (evt.key === "Enter" && query && stacks.length) {
       this.selectStack(stacks[0]);
+    }
+
+    if (evt.key === "ArrowDown" && this.cards.length) {
+      evt.preventDefault();
+      this.cards[0].focus();
+    }
+  };
+
+  handleKeyDown = evt => {
+    if (evt.key === "ArrowDown" && this.cards.length) {
+      evt.preventDefault();
+      const item = this.cards[this.activeCardIndex + 1];
+
+      item && item.focus();
+    }
+
+    if (evt.key === "ArrowUp" && this.cards.length) {
+      evt.preventDefault();
+      const item = this.cards[this.activeCardIndex - 1];
+
+      item && item.focus();
     }
   };
 
   render() {
     const { selectedStack } = this.props;
     const stacks = this.getActiveStacks();
+
+    this.cards = [];
 
     if (selectedStack) {
       return <Stack key={selectedStack} />;
@@ -83,10 +109,17 @@ class StacksPage extends Component {
         </Header>
 
         <Card.Group>
-          {stacks.map(stack => (
+          {stacks.map((stack, index) => (
             <Card
+              ref={node => {
+                this.cards[index] = node;
+              }}
               name={stack.name}
               onClick={this.createStackClickHandler(stack)}
+              onKeyDown={this.handleKeyDown}
+              onFocus={() => {
+                this.activeCardIndex = index;
+              }}
             />
           ))}
         </Card.Group>

@@ -17,19 +17,25 @@ class Dropdown extends Component {
     this.setState({ active: false });
   };
 
-  handleButtonClick = async ({ key }) => {
+  manageFocus = () => {
     const { options, value, dividerOption } = this.props;
     const { active } = this.state;
     const activeIndex = [...options, dividerOption]
       .filter(Boolean)
       .findIndex(i => i.value === value);
 
-    await this.setState({ active: !active });
-
-    if (!active && activeIndex !== -1) {
+    if (active && activeIndex !== -1) {
       this.focusedItemIndex = activeIndex;
       this.items[activeIndex].focus();
     }
+  };
+
+  handleButtonClick = async () => {
+    const { active } = this.state;
+
+    await this.setState({ active: !active });
+
+    this.manageFocus();
   };
 
   execKeyAction = key => {
@@ -62,8 +68,12 @@ class Dropdown extends Component {
     action();
   };
 
-  handleKeyDown = evt => {
-    if (!this.state.active) return;
+  handleKeyDown = async (evt) => {
+    if(!this.state.active && evt.key === 'ArrowDown') {
+      evt.preventDefault();
+      await this.setState({ active: true });
+      return this.manageFocus();
+    } else if (!this.state.active) return;
 
     const preventDefault = {
       Escape: true,

@@ -15,6 +15,9 @@ class StackPage extends Component {
     query: ""
   };
 
+  cards = [];
+  activeCardIndex = undefined;
+
   componentDidMount() {
     const { fetchServices } = this.props;
 
@@ -32,6 +35,7 @@ class StackPage extends Component {
   selectService = stack => {
     this.props.selectService(stack.id);
     this.setState({ query: "" });
+    this.activeCardIndex = undefined;
   };
 
   createServiceClickHandles = service => () => {
@@ -46,12 +50,33 @@ class StackPage extends Component {
     return services;
   };
 
-  handleKeyChange = ({ key }) => {
+  handleKeyChange = evt => {
     const { query } = this.state;
     const services = this.getActiveServices();
 
-    if (key === "Enter" && query && services.length) {
+    if (evt.key === "Enter" && query && services.length) {
       this.selectService(services[0]);
+    }
+
+    if (evt.key === "ArrowDown" && this.cards.length) {
+      evt.preventDefault();
+      this.cards[0].focus();
+    }
+  };
+
+  handleKeyDown = evt => {
+    if (evt.key === "ArrowDown" && this.cards.length) {
+      evt.preventDefault();
+      const item = this.cards[this.activeCardIndex + 1];
+
+      item && item.focus();
+    }
+
+    if (evt.key === "ArrowUp" && this.cards.length) {
+      evt.preventDefault();
+      const item = this.cards[this.activeCardIndex - 1];
+
+      item && item.focus();
     }
   };
 
@@ -59,6 +84,8 @@ class StackPage extends Component {
     const { stack, selectStack, selectedService } = this.props;
     const services = this.getActiveServices();
 
+    this.cards = [];
+  
     if (selectedService) {
       return <Service key={selectedService} />;
     }
@@ -76,15 +103,22 @@ class StackPage extends Component {
             name="searchServices"
             key="searchServices"
             onChange={this.handleSearchChange}
-            onKeyPress={this.handleKeyChange}
+            onKeyDown={this.handleKeyChange}
           />
         </Header>
 
         <Card.Group>
-          {services.map(service => (
+          {services.map((service, index) => (
             <Card
+              ref={node => {
+                this.cards[index] = node;
+              }}
               name={service.name}
               onClick={this.createServiceClickHandles(service)}
+              onKeyDown={this.handleKeyDown}
+              onFocus={() => {
+                this.activeCardIndex = index;
+              }}
             />
           ))}
         </Card.Group>
@@ -103,7 +137,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   fetchServices,
   selectStack: actions.selectStack,
-  selectService: actions.selectService,
+  selectService: actions.selectService
 };
 
 export default connect(
