@@ -18,14 +18,13 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "nodemon --exec 'react-scripts build' --watch src --watch public",
     "build": "react-scripts build",
-    "build:watch": "nodemon --exec 'react-scripts build' --watch src --watch public",
     "build:zip": "node ./scripts/zipBuild",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "update-manifest": "node ./scripts/updateManifest",
-    "version": "npm run update-manifest && git add public/manifest.json",
+    "version": "npm run build && npm run update-manifest && git add public/manifest.json",
     "postversion": "npm run build:zip"
   },
   "eslintConfig": {
