@@ -3,6 +3,7 @@ import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
 import getUserPreference from "../utils/getUserPreference";
 import notification from "../utils/notification";
+import filterServiceChange from "../utils/filterServiceChange";
 import actions from "./actions";
 import {
   getApi,
@@ -125,16 +126,14 @@ export const subscribeToResourceChange = () => (dispatch, getState) => {
 
   socket.addEventListener("close", () => console.log("Socket closed"));
 
-  socket.addEventListener("message", event => {
-    const message = JSON.parse(event.data);
-    const { resourceType, name, data } = message;
-
-    if (name === "resource.change" && data && resourceType === "service") {
-      const { resource } = data;
-
-      dispatch(actions.updateService(resource));
-    }
-  });
+  socket.addEventListener(
+    "message",
+    filterServiceChange(service => {
+      if (getState().servicesById[service.id]) {
+        dispatch(actions.updateService(service));
+      }
+    })
+  );
 
   return socket;
 };

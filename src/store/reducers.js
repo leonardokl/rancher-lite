@@ -102,7 +102,7 @@ export default combineReducers({
         [payload.id]: payload
       })
     },
-    []
+    {}
   ),
 
   selectedService: handleActions(
