@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { actions } from "../../store";
+import { actions, getProjects } from "../../store";
 import { Navbar } from "../../components";
 
 class HomeHeader extends Component {
@@ -40,7 +40,7 @@ class HomeHeader extends Component {
 
 const mapStateToProps = state => ({
   servers: state.servers,
-  projects: state.projects,
+  projects: getProjects(state),
   selectedProject: state.selectedProject,
   selectedServer: state.selectedServer
 });

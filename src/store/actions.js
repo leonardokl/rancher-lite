@@ -13,6 +13,7 @@ export default createActions(
   "REMOVE_SERVER",
   "SET_PROJECTS",
   "SELECT_PROJECT",
+  "SELECT_DEFAULT_PROJECT",
   "SET_STACKS",
   "SELECT_STACK",
   "SET_SERVICES",

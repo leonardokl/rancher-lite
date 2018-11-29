@@ -1,22 +1,25 @@
-import sortBy from "lodash/sortBy";
 import pick from "lodash/pick";
-import actions from "./actions";
-import { getApi, getSelectedStack, getSelectedService } from "./selectors";
+import keyBy from "lodash/keyBy";
+import sortBy from "lodash/sortBy";
+import getUserPreference from "../utils/getUserPreference";
 import notification from "../utils/notification";
-
-function getUserPreference(userPreferences, name) {
-  const userPreference = userPreferences.data.find(i => i.name === name);
-
-  try {
-    return JSON.parse(userPreference.value);
-  } catch (ex) {
-    return undefined;
-  }
-}
+import actions from "./actions";
+import {
+  getApi,
+  getSelectedProject,
+  getSelectedService,
+  getSelectedStack,
+  getProjects
+} from "./selectors";
 
 export const fetchProjects = () => async (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
+  const projects = getProjects(state);
+
+  if (state.entities.servers[state.selectedServer]) {
+    return dispatch(actions.selectDefaultProject(projects));
+  }
 
   dispatch(actions.showLoader());
 
@@ -33,16 +36,35 @@ export const fetchProjects = () => async (dispatch, getState) => {
     );
     const projectsData = projects.data.map(project => ({
       ...project,
-      default: project.id === defaultProjectId
+      _id: `${state.selectedServer}/${project.id}`,
+      default: project.id === defaultProjectId,
+      stacks: []
     }));
+    const result = projectsData.map(i => i._id);
+    const entities = {
+      servers: {
+        [state.selectedServer]: {
+          projects: result
+        }
+      },
+      projects: keyBy(projectsData, "_id")
+    };
 
     if (!projectsData.length) {
       dispatch(actions.hideLoader());
     }
 
-    dispatch(actions.setProjects(projectsData));
+    dispatch(
+      actions.setProjects({
+        result,
+        entities,
+        projects: projectsData
+      })
+    );
+    dispatch(actions.selectDefaultProject(projectsData));
   } catch (ex) {
     console.error(ex);
+    dispatch(actions.setProjects([]));
     dispatch(actions.hideLoader());
     notification.error(ex.message);
   }
@@ -51,12 +73,13 @@ export const fetchProjects = () => async (dispatch, getState) => {
 export const fetchStacks = () => async (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
+  const selectedProject = getSelectedProject(state);
 
   dispatch(actions.showLoader());
 
   try {
     const response = await api.get(
-      `projects/${state.selectedProject}/stacks?limit=-1&sort=name`
+      `projects/${selectedProject.id}/stacks?limit=-1&sort=name`
     );
 
     dispatch(actions.setStacks(response.data));
@@ -72,8 +95,9 @@ export const fetchStacks = () => async (dispatch, getState) => {
 export const subscribeToResourceChange = () => (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
+  const selectedProject = getSelectedProject(state);
 
-  const socket = api.subscribeToResourceChange(state.selectedProject);
+  const socket = api.subscribeToResourceChange(selectedProject.id);
 
   socket.addEventListener("open", () => console.log("Socket opened"));
 
@@ -97,12 +121,13 @@ export const fetchServices = () => async (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
   const stack = getSelectedStack(state);
+  const selectedProject = getSelectedProject(state);
 
   dispatch(actions.showLoader());
 
   try {
     const response = await api.get(
-      `projects/${state.selectedProject}/stacks/${
+      `projects/${selectedProject.id}/stacks/${
         stack.id
       }/services?limit=-1&sort=name`
     );
@@ -120,6 +145,7 @@ export const fetchServices = () => async (dispatch, getState) => {
 export const restartService = () => async (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
+  const selectedProject = getSelectedProject(state);
   const service = getSelectedService(state);
   const form = {
     rollingRestartStrategy: {
@@ -130,7 +156,7 @@ export const restartService = () => async (dispatch, getState) => {
 
   try {
     const response = await api.post(
-      `projects/${state.selectedProject}/services/${service.id}?action=restart`,
+      `projects/${selectedProject.id}/services/${service.id}?action=restart`,
       {
         body: JSON.stringify(form)
       }
@@ -146,11 +172,12 @@ export const restartService = () => async (dispatch, getState) => {
 export const finishServiceUpgrade = () => async (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
+  const selectedProject = getSelectedProject(state);
   const service = getSelectedService(state);
 
   try {
     const response = await api.post(
-      `projects/${state.selectedProject}/services/${
+      `projects/${selectedProject.id}/services/${
         service.id
       }?action=finishupgrade`
     );
@@ -164,6 +191,7 @@ export const finishServiceUpgrade = () => async (dispatch, getState) => {
 export const upgradeService = image => async (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
+  const selectedProject = getSelectedProject(state);
   const service = getSelectedService(state);
   const isDockerImage = /^docker:/.test(service.launchConfig.imageUuid);
   const imageUuid = isDockerImage ? `docker:${image}` : image;
@@ -184,7 +212,7 @@ export const upgradeService = image => async (dispatch, getState) => {
 
   try {
     const response = await api.post(
-      `projects/${state.selectedProject}/services/${
+      `projects/${selectedProject.id}/services/${
         state.selectedService
       }?action=upgrade`,
       {

@@ -18,9 +18,7 @@ const HomePage = ({ selectedServer, loading }) => (
 );
 
 const mapStateToProps = state => ({
-  servers: state.servers,
   loading: state.loading,
-  projects: state.projects,
   selectedServer: state.selectedServer
 });
 

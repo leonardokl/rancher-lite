@@ -1,9 +1,27 @@
 import { combineReducers } from "redux";
 import { handleAction, handleActions } from "redux-actions";
 import keyBy from "lodash/keyBy";
+import merge from 'lodash/merge';
 import actions from "./actions";
 
+const defaultEntities = {
+  servers: {},
+  projects: {},
+  stacks: {},
+  services: {}
+};
+
+const entities = (state = defaultEntities, { payload }) => {
+  if (payload && payload.entities) {
+    return merge({}, state, payload.entities)
+  }
+
+  return state
+}
+
 export default combineReducers({
+  entities,
+
   loading: handleActions(
     {
       [actions.showLoader]: () => true,
@@ -43,23 +61,16 @@ export default combineReducers({
     null
   ),
 
-  projects: handleActions(
-    {
-      [actions.setProjects]: (state, { payload }) => payload,
-      [actions.manageServers]: () => []
-    },
-    []
-  ),
   selectedProject: handleActions(
     {
       [actions.manageServers]: () => null,
       [actions.selectServer]: () => null,
       [actions.selectProject]: (state, { payload }) => payload,
-      [actions.setProjects]: (state, { payload }) => {
+      [actions.selectDefaultProject]: (state, { payload }) => {
         const defaultProject = payload.find(i => i.default);
 
-        if (defaultProject) return defaultProject.id;
-        if (payload.length) return payload[0].id;
+        if (defaultProject) return defaultProject._id;
+        if (payload.length) return payload[0]._id;
 
         return null;
       }

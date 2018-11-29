@@ -33,7 +33,7 @@ const Navbar = ({
                 placeholder="Environments"
                 value={selectedProject}
                 options={projects.map(project => ({
-                  value: project.id,
+                  value: project._id,
                   text: project.name
                 }))}
                 onChange={onProjectChange}

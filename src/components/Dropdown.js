@@ -150,7 +150,7 @@ class Dropdown extends Component {
           ))}
           {dividerOption && (
             <React.Fragment>
-              <li className="divider" />
+              <li className="divider" role="presentation" />
               <li
                 className={cn("", {
                   active: dividerOption.value === value,
