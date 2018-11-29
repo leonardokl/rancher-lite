@@ -4,7 +4,7 @@ import debounce from "lodash/debounce";
 import { Card, Header, Search } from "../components";
 import {
   actions,
-  getFilteredStacks,
+  getStacks,
   fetchStacks,
   subscribeToResourceChange
 } from "../store";
@@ -39,7 +39,7 @@ class StacksPage extends Component {
   };
 
   selectStack = stack => {
-    this.props.selectStack(stack.id);
+    this.props.selectStack(stack._id);
     this.setState({ query: "" });
     this.activeCardIndex = undefined;
   };
@@ -131,7 +131,7 @@ class StacksPage extends Component {
 const mapStateToProps = state => ({
   stacks: state.stacks,
   selectedStack: state.selectedStack,
-  getStacks: query => getFilteredStacks(state, query)
+  getStacks: query => getStacks(state, query)
 });
 
 const mapDispatchToProps = {

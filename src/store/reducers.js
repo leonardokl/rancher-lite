@@ -78,7 +78,6 @@ export default combineReducers({
     null
   ),
 
-  stacks: handleAction(actions.setStacks, (state, { payload }) => payload, []),
   selectedStack: handleActions(
     {
       [actions.manageServers]: () => null,

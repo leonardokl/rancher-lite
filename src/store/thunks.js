@@ -9,7 +9,8 @@ import {
   getSelectedProject,
   getSelectedService,
   getSelectedStack,
-  getProjects
+  getProjects,
+  getStacks
 } from "./selectors";
 
 export const fetchProjects = () => async (dispatch, getState) => {
@@ -64,7 +65,6 @@ export const fetchProjects = () => async (dispatch, getState) => {
     dispatch(actions.selectDefaultProject(projectsData));
   } catch (ex) {
     console.error(ex);
-    dispatch(actions.setProjects([]));
     dispatch(actions.hideLoader());
     notification.error(ex.message);
   }
@@ -74,6 +74,11 @@ export const fetchStacks = () => async (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
   const selectedProject = getSelectedProject(state);
+  const stacks = getStacks(state);
+
+  if (stacks.length) {
+    return dispatch(actions.hideLoader());
+  }
 
   dispatch(actions.showLoader());
 
@@ -81,11 +86,28 @@ export const fetchStacks = () => async (dispatch, getState) => {
     const response = await api.get(
       `projects/${selectedProject.id}/stacks?limit=-1&sort=name`
     );
+    const stacksData = response.data.map(stack => ({
+      ...stack,
+      _id: `${state.selectedServer}/${stack.id}`
+    }));
+    const result = stacksData.map(i => i._id);
+    const entities = {
+      projects: {
+        [selectedProject._id]: {
+          stacks: result
+        }
+      },
+      stacks: keyBy(stacksData, "_id")
+    };
 
-    dispatch(actions.setStacks(response.data));
+    dispatch(
+      actions.setStacks({
+        entities,
+        result
+      })
+    );
   } catch (ex) {
     console.error(ex);
-    dispatch(actions.setStacks([]));
     notification.error(ex.message);
   } finally {
     dispatch(actions.hideLoader());

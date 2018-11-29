@@ -6,7 +6,11 @@ export const getSelectedServer = state =>
   state.servers.find(server => server.id === state.selectedServer);
 
 export const getProjects = state => {
-  const projectIds = get(state, `entities.servers.${state.selectedServer}.projects`, []);
+  const projectIds = get(
+    state,
+    `entities.servers.${state.selectedServer}.projects`,
+    []
+  );
   const projects = projectIds.map(id => state.entities.projects[id]);
 
   return projects;
@@ -23,16 +27,23 @@ export const getApi = state => {
   }
 };
 
-export const getFilteredStacks = (state, query) => {
+export const getStacks = (state, query) => {
+  const stackIds = get(
+    state,
+    `entities.projects.${state.selectedProject}.stacks`,
+    []
+  );
+  const stacks = stackIds.map(id => state.entities.stacks[id]);
+
   if (!query) {
-    return state.stacks;
+    return stacks;
   }
 
-  return searchByName(state.stacks, query);
+  return searchByName(stacks, query);
 };
 
 export const getSelectedStack = state =>
-  state.stacks.find(stack => stack.id === state.selectedStack);
+  state.entities.stacks[state.selectedStack];
 
 export const getSelectedService = state =>
   state.servicesById[state.selectedService];
