@@ -63,7 +63,10 @@ export const fetchProjects = () => async (dispatch, getState) => {
         projects: projectsData
       })
     );
-    dispatch(actions.selectDefaultProject(projectsData));
+
+    if (!state.selectedProject) {
+      dispatch(actions.selectDefaultProject(projectsData));
+    }
   } catch (ex) {
     console.error(ex);
     dispatch(actions.hideLoader());
@@ -162,7 +165,7 @@ export const fetchServices = () => async (dispatch, getState) => {
     const servicesData = sortBy(
       response.data.map(service => ({
         ...service,
-        _id: `${state.selectedServer}/${service.id}`,
+        _id: `${state.selectedServer}/${service.id}`
       })),
       "name"
     );
@@ -270,9 +273,7 @@ export const upgradeService = image => async (dispatch, getState) => {
 
   try {
     const response = await api.post(
-      `projects/${selectedProject.id}/services/${
-        service.id
-      }?action=upgrade`,
+      `projects/${selectedProject.id}/services/${service.id}?action=upgrade`,
       {
         body: JSON.stringify(form)
       }

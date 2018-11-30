@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
-import thunk from 'redux-thunk'
+import thunk from "redux-thunk";
 import createChromeStorage from "redux-persist-chrome-storage";
 import actions from "./actions";
 import reducers from "./reducers";
@@ -10,7 +10,14 @@ const storage = createChromeStorage(window.chrome, "sync");
 
 const persistConfig = {
   key: "root",
-  whitelist: ["servers", "selectedServer", "addServerForm"],
+  whitelist: [
+    "addServerForm",
+    "selectedProject",
+    "selectedServer",
+    "selectedService",
+    "selectedStack",
+    "servers",
+  ],
   storage
 };
 const middlewares = [thunk];

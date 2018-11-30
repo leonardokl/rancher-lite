@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchProjects } from "../store";
+import { fetchProjects, getSelectedProject } from "../store";
 import Stacks from "./Stacks";
 
 class ServerPage extends Component {
@@ -14,7 +14,7 @@ class ServerPage extends Component {
     const { selectedProject } = this.props;
 
     if (selectedProject) {
-      return <Stacks key={selectedProject} />;
+      return <Stacks key={selectedProject.id} />;
     }
 
     return null;
@@ -22,7 +22,7 @@ class ServerPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  selectedProject: state.selectedProject
+  selectedProject: getSelectedProject(state)
 });
 
 const mapDispatchToProps = {

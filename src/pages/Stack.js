@@ -6,6 +6,7 @@ import {
   actions,
   fetchServices,
   getFilteredServices,
+  getSelectedService,
   getSelectedStack
 } from "../store";
 import Service from "./Service";
@@ -87,7 +88,7 @@ class StackPage extends Component {
     this.cards = [];
   
     if (selectedService) {
-      return <Service key={selectedService} />;
+      return <Service key={selectedService.id} />;
     }
 
     return (
@@ -129,7 +130,7 @@ class StackPage extends Component {
 
 const mapStateToProps = state => ({
   stack: getSelectedStack(state),
-  selectedService: state.selectedService,
+  selectedService: getSelectedService(state),
   services: state.services,
   getServices: query => getFilteredServices(state, query)
 });

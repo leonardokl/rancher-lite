@@ -6,6 +6,7 @@ import {
   actions,
   getStacks,
   fetchStacks,
+  getSelectedStack,
   subscribeToResourceChange
 } from "../store";
 import Stack from "./Stack";
@@ -93,7 +94,7 @@ class StacksPage extends Component {
     this.cards = [];
 
     if (selectedStack) {
-      return <Stack key={selectedStack} />;
+      return <Stack key={selectedStack.id} />;
     }
 
     return (
@@ -130,7 +131,7 @@ class StacksPage extends Component {
 
 const mapStateToProps = state => ({
   stacks: state.stacks,
-  selectedStack: state.selectedStack,
+  selectedStack: getSelectedStack(state),
   getStacks: query => getStacks(state, query)
 });
 
