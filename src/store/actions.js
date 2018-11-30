@@ -5,6 +5,13 @@ export default createActions(
     ADD_SERVER: payload => ({
       ...payload,
       id: Date.now().toString()
+    }),
+    UPDATE_SERVICE: payload => ({
+      entities: {
+        services: {
+          [payload._id]: payload
+        }
+      }
     })
   },
   "SHOW_LOADER",
@@ -18,7 +25,6 @@ export default createActions(
   "SELECT_STACK",
   "SET_SERVICES",
   "SELECT_SERVICE",
-  "UPDATE_SERVICE",
   "MANAGE_SERVERS",
   "UPDATE_ADD_SERVER_FORM",
   "RESET_ADD_SERVER_FORM"

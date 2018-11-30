@@ -1,7 +1,6 @@
 import { combineReducers } from "redux";
-import { handleAction, handleActions } from "redux-actions";
-import keyBy from "lodash/keyBy";
-import merge from 'lodash/merge';
+import { handleActions } from "redux-actions";
+import mergeWith from 'lodash/mergeWith';
 import actions from "./actions";
 
 const defaultEntities = {
@@ -11,9 +10,15 @@ const defaultEntities = {
   services: {}
 };
 
+function mergeStrategy(objValue, srcValue, key) {
+  if (key === 'actions') {
+    return srcValue;
+  }
+}
+
 const entities = (state = defaultEntities, { payload }) => {
   if (payload && payload.entities) {
-    return merge({}, state, payload.entities)
+    return mergeWith({}, state, payload.entities, mergeStrategy);
   }
 
   return state
@@ -86,23 +91,6 @@ export default combineReducers({
       [actions.selectStack]: (state, { payload }) => payload
     },
     null
-  ),
-
-  servicesIds: handleAction(
-    actions.setServices,
-    (state, { payload }) => payload.map(service => service.id),
-    []
-  ),
-
-  servicesById: handleActions(
-    {
-      [actions.setServices]: (state, { payload }) => keyBy(payload, "id"),
-      [actions.updateService]: (state, { payload }) => ({
-        ...state,
-        [payload.id]: payload
-      })
-    },
-    {}
   ),
 
   selectedService: handleActions(

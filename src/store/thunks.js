@@ -89,7 +89,8 @@ export const fetchStacks = () => async (dispatch, getState) => {
     );
     const stacksData = response.data.map(stack => ({
       ...stack,
-      _id: `${state.selectedServer}/${stack.id}`
+      _id: `${state.selectedServer}/${stack.id}`,
+      services: []
     }));
     const result = stacksData.map(i => i._id);
     const entities = {
@@ -129,8 +130,14 @@ export const subscribeToResourceChange = () => (dispatch, getState) => {
   socket.addEventListener(
     "message",
     filterServiceChange(service => {
-      if (getState().servicesById[service.id]) {
-        dispatch(actions.updateService(service));
+      const _id = `${state.selectedServer}/${service.id}`;
+      const serviceData = {
+        ...service,
+        _id
+      };
+
+      if (getState().entities.services[_id]) {
+        dispatch(actions.updateService(serviceData));
       }
     })
   );
@@ -152,8 +159,29 @@ export const fetchServices = () => async (dispatch, getState) => {
         stack.id
       }/services?limit=-1&sort=name`
     );
+    const servicesData = sortBy(
+      response.data.map(service => ({
+        ...service,
+        _id: `${state.selectedServer}/${service.id}`,
+      })),
+      "name"
+    );
+    const result = servicesData.map(i => i._id);
+    const entities = {
+      stacks: {
+        [stack._id]: {
+          services: result
+        }
+      },
+      services: keyBy(servicesData, "_id")
+    };
 
-    dispatch(actions.setServices(sortBy(response.data, "name")));
+    dispatch(
+      actions.setServices({
+        result,
+        entities
+      })
+    );
   } catch (ex) {
     console.error(ex);
     dispatch(actions.setServices([]));
@@ -182,8 +210,12 @@ export const restartService = () => async (dispatch, getState) => {
         body: JSON.stringify(form)
       }
     );
+    const serviceData = {
+      ...response,
+      _id: `${state.selectedServer}/${response.id}`
+    };
 
-    dispatch(actions.updateService(response));
+    dispatch(actions.updateService(serviceData));
   } catch (ex) {
     console.error(ex);
     notification.error(ex.message);
@@ -202,13 +234,18 @@ export const finishServiceUpgrade = () => async (dispatch, getState) => {
         service.id
       }?action=finishupgrade`
     );
+    const serviceData = {
+      ...response,
+      _id: `${state.selectedServer}/${response.id}`
+    };
 
-    dispatch(actions.updateService(response));
+    dispatch(actions.updateService(serviceData));
   } catch (ex) {
     console.error(ex);
     notification.error(ex.message);
   }
 };
+
 export const upgradeService = image => async (dispatch, getState) => {
   const state = getState();
   const api = getApi(state);
@@ -234,14 +271,18 @@ export const upgradeService = image => async (dispatch, getState) => {
   try {
     const response = await api.post(
       `projects/${selectedProject.id}/services/${
-        state.selectedService
+        service.id
       }?action=upgrade`,
       {
         body: JSON.stringify(form)
       }
     );
+    const serviceData = {
+      ...response,
+      _id: `${state.selectedServer}/${response.id}`
+    };
 
-    dispatch(actions.updateService(response));
+    dispatch(actions.updateService(serviceData));
   } catch (ex) {
     console.error(ex);
     notification.error(ex.message);

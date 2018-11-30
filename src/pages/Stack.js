@@ -33,7 +33,7 @@ class StackPage extends Component {
   };
 
   selectService = stack => {
-    this.props.selectService(stack.id);
+    this.props.selectService(stack._id);
     this.setState({ query: "" });
     this.activeCardIndex = undefined;
   };

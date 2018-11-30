@@ -46,10 +46,15 @@ export const getSelectedStack = state =>
   state.entities.stacks[state.selectedStack];
 
 export const getSelectedService = state =>
-  state.servicesById[state.selectedService];
+  state.entities.services[state.selectedService];
 
 export const getFilteredServices = (state, query) => {
-  const services = state.servicesIds.map(id => state.servicesById[id]);
+  const serviceIds = get(
+    state,
+    `entities.stacks.${state.selectedStack}.services`,
+    []
+  );
+  const services = serviceIds.map(id => state.entities.services[id]);
 
   if (!query) {
     return services;
