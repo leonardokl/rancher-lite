@@ -8,7 +8,7 @@
     "default_icon": "logo.png"
   },
   "icons": {
-    "128": "logo.png"
+    "128": "logo128x128.png"
   },
   "permissions": [
     "wss://*/",
