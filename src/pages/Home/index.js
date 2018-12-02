@@ -8,7 +8,7 @@ import Header from "./Header";
 const HomePage = ({ selectedServer, loading }) => (
   <div className="App">
     <Header />
-    {selectedServer && selectedServer !== "manageServers" ? (
+    {selectedServer ? (
       <Server key={selectedServer} />
     ) : (
       <Servers />

@@ -64,7 +64,7 @@ export const fetchProjects = () => async (dispatch, getState) => {
       })
     );
 
-    if (!state.selectedProject) {
+    if (!getSelectedProject(getState())) {
       dispatch(actions.selectDefaultProject(projectsData));
     }
   } catch (ex) {

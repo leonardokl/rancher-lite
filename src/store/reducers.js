@@ -61,15 +61,12 @@ export default combineReducers({
     {
       [actions.selectServer]: (state, { payload }) => payload,
       [actions.addServer]: (state, { payload }) => payload.id,
-      [actions.manageServers]: () => "manageServers"
     },
-    null
+    ''
   ),
 
   selectedProject: handleActions(
     {
-      [actions.manageServers]: () => null,
-      [actions.selectServer]: () => null,
       [actions.selectProject]: (state, { payload }) => payload,
       [actions.selectDefaultProject]: (state, { payload }) => {
         const defaultProject = payload.find(i => i.default);
@@ -85,7 +82,6 @@ export default combineReducers({
 
   selectedStack: handleActions(
     {
-      [actions.manageServers]: () => null,
       [actions.selectServer]: () => null,
       [actions.selectProject]: () => null,
       [actions.selectStack]: (state, { payload }) => payload
@@ -95,7 +91,6 @@ export default combineReducers({
 
   selectedService: handleActions(
     {
-      [actions.manageServers]: () => null,
       [actions.selectServer]: () => null,
       [actions.selectProject]: () => null,
       [actions.selectStack]: () => null,

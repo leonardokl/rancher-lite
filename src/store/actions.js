@@ -25,7 +25,6 @@ export default createActions(
   "SELECT_STACK",
   "SET_SERVICES",
   "SELECT_SERVICE",
-  "MANAGE_SERVERS",
   "UPDATE_ADD_SERVER_FORM",
   "RESET_ADD_SERVER_FORM"
 );

@@ -23,7 +23,7 @@ const Navbar = ({
                 text: server.url
               }))}
               dividerOption={{
-                value: "manageServers",
+                value: "",
                 text: "Manage Servers"
               }}
               onChange={onServerChange}

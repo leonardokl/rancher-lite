@@ -16,8 +16,11 @@ export const getProjects = state => {
   return projects;
 };
 
-export const getSelectedProject = state =>
-  state.entities.projects[state.selectedProject];
+export const getSelectedProject = state => {
+  const projects = getProjects(state);
+
+  return projects.find(i => i._id === state.selectedProject);
+}
 
 export const getApi = state => {
   const server = getSelectedServer(state);

@@ -5,21 +5,12 @@ import { Navbar } from "../../components";
 
 class HomeHeader extends Component {
   handleServerChange = (evt, { value }) => {
-    const { manageServers, selectedServer } = this.props;
-
-    if (value === "manageServers") {
-      manageServers();
-    } else if (value !== selectedServer) {
-      this.props.onSelectServer(value);
-    }
+    this.props.onSelectServer(value);
+    
   };
 
   handleProjectChange = (evt, { value }) => {
-    const { selectedProject } = this.props;
-
-    if (selectedProject !== value) {
-      this.props.onSelectProject(value);
-    }
+    this.props.onSelectProject(value);
   };
 
   render() {
@@ -48,7 +39,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   onSelectServer: actions.selectServer,
   onSelectProject: actions.selectProject,
-  manageServers: actions.manageServers
 };
 
 export default connect(
