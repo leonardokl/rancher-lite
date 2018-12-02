@@ -26,12 +26,14 @@ function createRancherApi({ url, accessKey, secretKey }) {
 
       return json;
     },
-    post: async (pathName, opts = {}) => {
-      const response = await fetch(`${baseURL}${pathName}`, {
+    post: async (pathName, data) => {
+      const opts = {
+        method: "POST",
         ...options,
-        ...opts,
-        method: "POST"
-      });
+        body: data ? JSON.stringify(data) : undefined
+      };
+
+      const response = await fetch(`${baseURL}${pathName}`, opts);
       const json = await response.json();
 
       if (!validateStatus(response)) {

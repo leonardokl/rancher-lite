@@ -187,7 +187,6 @@ export const fetchServices = () => async (dispatch, getState) => {
     );
   } catch (ex) {
     console.error(ex);
-    dispatch(actions.setServices([]));
     notification.error(ex.message);
   } finally {
     dispatch(actions.hideLoader());
@@ -209,9 +208,7 @@ export const restartService = () => async (dispatch, getState) => {
   try {
     const response = await api.post(
       `projects/${selectedProject.id}/services/${service.id}?action=restart`,
-      {
-        body: JSON.stringify(form)
-      }
+      form
     );
     const serviceData = {
       ...response,
@@ -274,9 +271,7 @@ export const upgradeService = image => async (dispatch, getState) => {
   try {
     const response = await api.post(
       `projects/${selectedProject.id}/services/${service.id}?action=upgrade`,
-      {
-        body: JSON.stringify(form)
-      }
+      form
     );
     const serviceData = {
       ...response,
