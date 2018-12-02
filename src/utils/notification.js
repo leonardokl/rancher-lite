@@ -2,7 +2,7 @@
 
 function notification(title, message) {
   const options = {
-    iconUrl: "logo.png",
+    iconUrl: "logo128x128.png",
     type: "basic",
     title,
     message
