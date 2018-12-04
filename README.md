@@ -1,8 +1,11 @@
 # Rancher Lite
 
-Chrome extension to manage multiple rancher servers.
+Browser extension to manage multiple rancher servers.
 
-<a target="_blank" href="https://chrome.google.com/webstore/detail/rancher-lite/mdbboaciikfffcenfdlhkemdniabcbld"><img alt="Try it now" src="images/chrome-web-store.png" title="Click here to install from the Chrome Web Store"></img></a>
+## Install
+
+- [Chrome extension](https://chrome.google.com/webstore/detail/rancher-lite/mdbboaciikfffcenfdlhkemdniabcbld)
+- [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/rancher-lite)
 
 ## Features
   - Access multiple rancher servers
