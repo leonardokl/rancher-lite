@@ -25,3 +25,4 @@ yarn-error.log*
 tmp
 build.zip
 build.crx
+web-ext-artifacts

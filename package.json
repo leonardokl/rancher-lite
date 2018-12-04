@@ -19,12 +19,13 @@
   "scripts": {
     "start": "nodemon --exec 'react-scripts build' --watch src --watch public",
     "build": "react-scripts build",
-    "build:zip": "node ./scripts/zipBuild",
+    "build:ext": "npm run web-ext build -- -s=build -o",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "update-manifest": "node ./scripts/updateManifest",
     "version": "npm run build && npm run update-manifest && git add public/manifest.json",
-    "postversion": "npm run build:zip"
+    "postversion": "npm run build:ext",
+    "web-ext": "web-ext"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -37,6 +38,7 @@
   ],
   "devDependencies": {
     "nodemon": "^1.18.6",
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.3",
+    "web-ext": "^2.9.2"
   }
 }
