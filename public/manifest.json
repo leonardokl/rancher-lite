@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "name": "Rancher Lite",
   "description": "Manage multiple rancher servers.",
+  "applications": {
+    "gecko": {
+      "id": "@rancher-lite",
+      "strict_min_version": "54.0"
+    }
+  },
   "browser_action": {
     "default_popup": "index.html",
     "default_icon": "logo.png"
@@ -19,5 +25,5 @@
     "webRequest",
     "webRequestBlocking"
   ],
-  "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='"
+  "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
 }

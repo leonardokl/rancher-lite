@@ -24,6 +24,11 @@ header nav.navbar .project-btn .dropdown-menu.project-menu .active a {
   cursor: pointer!important;
 }
 
+.btn-default:focus {
+  color: #fff!important;
+  background: #99a3a8!important;
+}
+
 .clearfix.well.r-p0.r-m0:hover {
   background-color: #99a3a8 !important;
 }

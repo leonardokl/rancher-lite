@@ -1,12 +1,11 @@
 import { createStore, applyMiddleware } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import thunk from "redux-thunk";
-import createChromeStorage from "redux-persist-chrome-storage";
+import storage from '../utils/storage';
 import actions from "./actions";
 import reducers from "./reducers";
 
 const { REACT_APP_DEBUG } = process.env;
-const storage = createChromeStorage(window.chrome, "sync");
 
 const persistConfig = {
   key: "root",
@@ -16,7 +15,7 @@ const persistConfig = {
     "selectedServer",
     "selectedService",
     "selectedStack",
-    "servers",
+    "servers"
   ],
   storage
 };
